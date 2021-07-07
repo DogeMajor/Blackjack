@@ -1,16 +1,24 @@
 import { Card, Suit } from "./card.model";
-import { Injectable } from "@angular/core";
+import { Injectable, OnInit, Input } from "@angular/core";
 
 var allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]
 
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class CardDeck {
-    constructor( public cards: Card[] =  [] ) {
+
+    public cards: Card[] =  []
+    constructor() {
         for (let num = 2; num < 15; num++) {
             for (var suit of allSuits) {
                 this.cards.push(new Card(suit, num));
             } 
         }
+    }
+
+    get length() {
+        return this.cards.length;
     }
 
     popRandomCards(amount: number = 1) {

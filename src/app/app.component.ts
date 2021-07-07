@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 
+
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+    selector: "app-root",
+    template: "<game></game>"
+    //template: "app.component.html"
 })
-export class AppComponent {
-  title = 'Blackjack';
+
+export class AppComponent { 
+    title = "Blackjack";
 }

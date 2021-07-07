@@ -1,0 +1,31 @@
+<div class="container-fluid">
+    <h1> Pot: {{ pot }} </h1>
+    <button nbButton outline status="danger" (click)="restart()">Restart the game</button>
+    <button nbButton outline status="danger" (click)="deal()">Deal Cards</button>
+    <div class="row">
+        <div class="col bg-dark text-white">
+            <a class="navbar-brand">BLACKJACK</a>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <a>
+            Round: {{ round }}
+        </a>
+        <a>
+            Amount of players: {{ howManyPlayers }}
+        </a>
+        <a>
+            Cards left: {{ cardsLeft }}
+        </a>
+
+        
+    </div>
+    <div *ngFor="let player of players" class="card m-1 p-1 bg-light">
+        <h4>
+          Name: {{player.name}}
+          Money: {{player.money}}
+          
+        </h4>
+
+      </div>
+</div>
