@@ -35,6 +35,17 @@ export class GameComponent implements OnInit{
         this.round = 1;
     }
 
+    setBet(amount: number) {
+        let users: Player[] = this.players.filter(c=>c.type == PlayerType.User);
+        if (users.length == 1) {
+            users[0].setBet(amount);
+            this.pot += amount;
+        }
+        else {
+            alert("User was not found!");
+        }
+    }
+
     get howManyPlayers() {
         return this.players.length;
     }
@@ -55,7 +66,7 @@ export class GameComponent implements OnInit{
     distributeWinnings(winners: Player[]) {
         let winnings: number = this.pot / winners.length;
         for (let player of winners) {
-            player.addMoney(winnings);
+            player.transferMoney(winnings);
         }
     }
 
@@ -68,10 +79,10 @@ export class GameComponent implements OnInit{
     deal() {
         let amount: number = (this.round == 1) ? 2 : 1;
         let cardsLeft: number = this.deck.length;
-        console.log("Hewre we are");
+        console.log("Starting to deal cards...");
         for (let player of this.players) {
-            if (player.wantMoreCards()) {
-                console.log("Player"+"$player");
+            if (player.moreCards) {
+                console.log("Player {{player.name}}");
                 let cards: Card[] = this.deck.popRandomCards(amount);
                 player.deal(cards);
             }

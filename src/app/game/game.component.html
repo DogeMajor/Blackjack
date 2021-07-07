@@ -24,8 +24,29 @@
         <h4>
           Name: {{player.name}}
           Money: {{player.money}}
+          Bet: {{player.bet}}
+          More cards: {{ player.moreCards }}
           
         </h4>
-
+        <div class="card" *ngIf="player.cards.length != 0">
+            <div *ngFor="let card of player.cards" class="card m-2 p-1 bg-light">
+                <h4> {{ card.suit}} {{ card.num }}</h4>
+            </div>
+            <h4>Best hand: {{ player.bestHand }}</h4>
+        </div>
+        
+        <div class="col">
+            <input type="number" placeholder="Enter bet size here" #betVal/>
+            <div class="col-auto">
+                <button class="btn btn-primary" (click)="setBet(+betVal.value)">
+                    Bet
+                </button>
+            </div>
+            <td><input type="checkbox" [(ngModel)]="player.moreCards" ></td>
+            <td [ngSwitch]="player.moreCards">
+                <span *ngSwitchCase="true">Yes</span>
+                <span *ngSwitchDefault>No</span>
+            </td>
+        </div>
       </div>
 </div>

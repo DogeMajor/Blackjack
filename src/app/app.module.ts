@@ -18,6 +18,7 @@ import { AppComponent } from './app.component';
 export class AppModule { }*/
 
 import { NgModule } from "@angular/core";
+import { FormsModule } from '@angular/forms';
 import { BrowserModule } from "@angular/platform-browser";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from './app-routing.module';
@@ -28,7 +29,8 @@ import { environment } from '../environments/environment';
 @NgModule({
     imports: [
         BrowserModule,
-        AppRoutingModule
+        AppRoutingModule,
+        FormsModule
       ],
         
         //ServiceWorkerModule.register('ngsw-worker.js', {
