@@ -21,7 +21,7 @@ export class Player {
         public money: number,
         public type: PlayerType,
         public name: string,
-        public moreCards: boolean = false,
+        public moreCards: boolean = true,
         ) {
         for (let card of cardsVar) {
             this.cards.push(card);
@@ -86,13 +86,4 @@ export class Player {
             this.cards.push(card);
         } 
     }
-
-    wantMoreCards(answer: boolean | null = null) {
-        if (answer == null) {
-            answer = this.bestHand < 15? true: false;
-        }
-        this.moreCards = answer;
-        
-    }
-
 }

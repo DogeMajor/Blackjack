@@ -46,7 +46,6 @@ export class Card {
                 this.symbol = FaceCardValue[this.num].toString();
             }
             
-            
         }
     
         get cardValue(): number {
