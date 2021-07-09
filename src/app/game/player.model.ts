@@ -13,8 +13,17 @@ export enum PlayerType {
  //   providedIn: 'root',
 //})
 export class Player {
-    constructor( public cards: Card[], public money: number, public type: PlayerType, public name: string) {
-        for (let card of cards) {
+    public cards: Card[] = [];
+    public bet: number = 0;
+    
+    constructor(
+        public cardsVar: Card[],
+        public money: number,
+        public type: PlayerType,
+        public name: string,
+        public moreCards: boolean = true,
+        ) {
+        for (let card of cardsVar) {
             this.cards.push(card);
         }
         this.money = money;
@@ -22,12 +31,13 @@ export class Player {
         this.name = name;
     }
 
-    bet(amount: number) {
+    setBet(amount: number) {
         if (this.money - amount < 0) {
             alert("Player does not have sufficient funds for the bet!");
         }
         else {
             this.money -= amount;
+            this.bet = amount;
         }
     }
 
@@ -62,12 +72,13 @@ export class Player {
         } 
     }
 
-    addMoney(amount: number) {
+    transferMoney(amount: number) {
         this.money += amount;
     }
 
     clearHand() {
         this.cards = [];
+        this.bet = 0;
     }
 
     deal(cards: Card[]) {
@@ -75,14 +86,4 @@ export class Player {
             this.cards.push(card);
         } 
     }
-
-    wantMoreCards(answer: true | false | null = null): boolean {
-        if (answer == null) {
-            return (this.bestHand < 15)? true: false;
-        }
-        else {
-            return answer;
-        }
-    }
-
 }
