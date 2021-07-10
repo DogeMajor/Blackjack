@@ -1,10 +1,9 @@
-import { Card } from "./card.model";
+import { Card, Suit } from "./card.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
 import { CardDeck } from "./cardDeck.model";
 //import { Injectable } from "@angular/core";
-import { Component, OnInit, Input, NgModule } from "@angular/core";
-import { ɵInternalFormsSharedModule } from "@angular/forms";
+import { Component, OnInit, Input, NgModule, Type } from "@angular/core";
 
 
 @Component({
@@ -12,12 +11,14 @@ import { ɵInternalFormsSharedModule } from "@angular/forms";
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"]
 })
+
 export class GameComponent implements OnInit{
     //constructor( public deck: CardDeck, public players: Player[], 
     //    public pot: number = 0, public round: number = 1) {}
     @Input() pot: number = 0;
     @Input() round: number = 1;
     public otherPlayers: Player[] = [];
+    public gameOver: boolean = false;
     public user: Player;
     public dealer: Player;
 
@@ -35,11 +36,6 @@ export class GameComponent implements OnInit{
 
     restart() {
         this.deck = new CardDeck();
-        //this.dealer = null;
-        //this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
-        //this.user = new Player([], 1000, PlayerType.User, "User");
-        //this.players.push(new Player([], 10000, PlayerType.Dealer, "Dealer"));
-        // this.players.push(new Player([], 1000, PlayerType.User, "User"));
         this.clear();
     }
 
@@ -56,6 +52,7 @@ export class GameComponent implements OnInit{
         }
         this.pot = 0;
         this.round = 1;
+        this.gameOver = false;
     }
 
     bet(amount: number) {
@@ -105,10 +102,11 @@ export class GameComponent implements OnInit{
             console.log(winner);
         }
         this.distributeWinnings(winners);
-        this.pot = 0;
+        //this.pot = 0;
+        //this.clear;
     }
 
-    deal(): boolean {
+    hit(): boolean {
         let amount: number = (this.round == 1) ? 2 : 1;
         let cardsLeft: number = this.deck.length;
         this.dealTo(this.user, amount);
@@ -123,13 +121,15 @@ export class GameComponent implements OnInit{
             this.dealTo(this.dealer, amount);
             this.round++;
         }
+        this.gameOver = true;
         this.endGame();
     }
 
-    dealTo(player: Player, amount: number) {
+    dealTo(player: Player, amount: number, faceDown: boolean = false) {
         if (this.deck.length - amount >= 0) {
             let cards: Card[] = this.deck.popRandomCards(amount);
             player.deal(cards);
         }
     }
+
 }

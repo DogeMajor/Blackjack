@@ -5,3 +5,71 @@ input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
     --background-color: #990e0e;
     --text-color: #2a0f75;
 }
+
+button {
+    color: red;
+}
+
+.container-fluid {
+    background-color: rgb(6, 65, 21);
+}
+
+.top {
+    text-align: left;
+}
+
+h1 {
+    text-align: center;
+}
+
+.bottom {
+    text-align: right;
+}
+  
+
+.Card {
+    background-color:white;
+    display: flex;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    border: 1px solid #000;
+    border-radius: .3em;
+    height: 7.5em;
+    width: 6em;
+    float:left;
+}
+
+.Card_back {
+    background-color:red;
+    display: flex;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    border: 1px solid #000;
+    border-radius: .3em;
+    height: 7.5em;
+    width: 6em;
+    float:left;
+}
+
+/*.Card__caption {
+    
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    
+}*/
+
+.Card-red {
+  color: red;
+}
+
+.Card-black {
+  color: black;
+}
