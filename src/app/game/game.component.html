@@ -1,8 +1,5 @@
 <div class="container-fluid">
-    <h1> Pot: {{ pot }} </h1>
-    <button class="root" nbButton outline status="danger" (click)="restart()">Restart the game</button>
-    <button nbButton outline status="danger" (click)="deal()">Hit</button>
-    <button nbButton outline status="danger" (click)="stand()">Stand</button>
+    
     <div class="row">
         <div class="col bg-dark text-white">
             <a class="navbar-brand">BLACKJACK</a>
@@ -18,6 +15,9 @@
         <a>
             Cards left: {{ cardsLeft }}
         </a>
+        <a>
+            Game over: {{ gameOver }}
+        </a>
 
         
     </div>
@@ -26,37 +26,43 @@
               Name: {{dealer.name}}
               Money: {{dealer.money}}
               Bet: {{dealer.bet}}
-              More cards: {{ dealer.moreCards }}
               
             </h4>
             <div class="card" *ngIf="dealer.cards.length != 0">
-                <div *ngFor="let card of dealer.cards" [class]='card.colorClass'>
-                    <h4> {{ card.suit}} {{ card.symbol }}</h4>
+                <div *ngFor="let card of dealer.cards; index as i" [class]='card.colorClass'>
+                    <div *ngIf="i==0 || gameOver">
+                    <div class="Card">
+                        <div class="top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
+                        <h1>{{card.suit}}</h1>
+                        <div class="bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
+                    </div>
+                    </div>
+                    <div *ngIf="i!=0 && !gameOver">
+                    <div class="Card_back">
+                        
+                    </div>
+                    </div>
                 </div>
                 <h4>Best hand: {{ dealer.bestHand }}</h4>
             </div>
             
-            <div class="col">
-                
-                <td><input type="checkbox" [(ngModel)]="dealer.moreCards" ></td>
-                <td [ngSwitch]="dealer.moreCards" Hit me>
-                    <span *ngSwitchCase="true">Yes</span>
-                    <span *ngSwitchDefault>No</span>
-                </td>
-            </div>
+            
           </div>
     <div class="card m-1 p-1 bg-light">
         <h4>
           Name: {{user.name}}
           Money: {{user.money}}
           Bet: {{user.bet}}
-          More cards: {{ user.moreCards }}
           
         </h4>
         <div class="card" *ngIf="user.cards.length != 0">
             <div *ngFor="let card of user.cards" [class]='card.colorClass'>
                 <!--<label class="'Card__suit-' + card.suit"> {{ card.suit}} </label>-->
-                <label class="Card">{{card.suit}} {{card.symbol}}</label>
+                <div class="Card">
+                    <div class="top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
+                    <h1>{{card.suit}}</h1>
+                    <div class="bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
+                </div>
             </div>
             <h4>Best hand: {{ user.bestHand }}</h4>
         </div>
@@ -70,11 +76,12 @@
                     </button>
                 </div>
             </div>
-            <td><input type="checkbox" [(ngModel)]="user.moreCards" ></td>
-            <td [ngSwitch]="user.moreCards">
-                <span *ngSwitchCase="true">Yes</span>
-                <span *ngSwitchDefault>No</span>
-            </td>
+            
         </div>
       </div>
+
+<h1> Pot: {{ pot }} </h1>
+    <button class="root" nbButton outline status="danger" (click)="restart()">Restart the game</button>
+    <button nbButton outline status="danger" (click)="hit()">Hit</button>
+    <button nbButton outline status="danger" (click)="stand()">Stand</button>
 </div>

@@ -1,5 +1,4 @@
 import { Card } from "./card.model";
-import { Injectable } from "@angular/core";
 
 
 export enum PlayerType {
@@ -8,10 +7,6 @@ export enum PlayerType {
     NPC = "NPC",
 }
 
-
-//@Injectable({
- //   providedIn: 'root',
-//})
 export class Player {
     public cards: Card[] = [];
     public bet: number = 0;
@@ -21,7 +16,6 @@ export class Player {
         public money: number,
         public type: PlayerType,
         public name: string,
-        public moreCards: boolean = true,
         ) {
         for (let card of cardsVar) {
             this.cards.push(card);

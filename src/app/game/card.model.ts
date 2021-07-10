@@ -21,6 +21,7 @@ export class Card {
     public value: number = -1;
     public symbol: string | null = null;
 
+
     constructor(
         public suitVar: Suit,
         public numVar: number = -1,
