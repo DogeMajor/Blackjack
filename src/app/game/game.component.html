@@ -30,8 +30,8 @@
               
             </h4>
             <div class="card" *ngIf="dealer.cards.length != 0">
-                <div *ngFor="let card of dealer.cards" class="card m-2 p-1 bg-light">
-                    <h4> {{ card.suit}} {{ card.num }}</h4>
+                <div *ngFor="let card of dealer.cards" [class]='card.colorClass'>
+                    <h4> {{ card.suit}} {{ card.symbol }}</h4>
                 </div>
                 <h4>Best hand: {{ dealer.bestHand }}</h4>
             </div>
@@ -54,8 +54,9 @@
           
         </h4>
         <div class="card" *ngIf="user.cards.length != 0">
-            <div *ngFor="let card of user.cards" class="card m-2 p-1 bg-light">
-                <h4> {{ card.suit}} {{ card.num }}</h4>
+            <div *ngFor="let card of user.cards" [class]='card.colorClass'>
+                <!--<label class="'Card__suit-' + card.suit"> {{ card.suit}} </label>-->
+                <label class="Card">{{card.suit}} {{card.symbol}}</label>
             </div>
             <h4>Best hand: {{ user.bestHand }}</h4>
         </div>

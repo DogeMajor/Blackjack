@@ -5,3 +5,42 @@ input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
     --background-color: #990e0e;
     --text-color: #2a0f75;
 }
+
+.container-fluid {
+    background-color: rgb(6, 65, 21);
+  }
+  
+
+.Card {
+    display: flex;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    border: 1px solid #000;
+    border-radius: .3em;
+    height: 12em;
+    width: 8em;
+    float:left;
+}
+
+.Card__caption {
+    /* only for screen readers */
+    /* https://css-tricks.com/places-its-tempting-to-use-display-none-but-dont/ */
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    
+}
+
+.Card-red {
+  color: red;
+}
+
+.Card-black {
+  color: black;
+}

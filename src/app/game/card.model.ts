@@ -1,11 +1,11 @@
-import { Injectable, Input } from "@angular/core";
 
 export enum Suit {
-    Diamonds = "DIAMONDS",
-    Spades = "SPADES",
-    Hearts = "HEARTS",
-    Clubs = "CLUBS",
+    Diamonds = '\u2666',
+    Spades = '\u2660',
+    Hearts = '\u2665',
+    Clubs = '\u2663',
 }
+
 
 export enum FaceCardValue {
     A = 14,
@@ -14,13 +14,8 @@ export enum FaceCardValue {
     J = 11,
 }
 
-//@Injectable({
-//    providedIn: 'root',
-//})
 export class Card {
 
-    //@Input() public suit: Suit;
-    //@Input() public num: number;
     public suit: Suit;
     public num: number;
     public value: number = -1;
@@ -50,6 +45,18 @@ export class Card {
     
         get cardValue(): number {
             return this.value;
+        }
+
+        get colorClass(): string {
+            if ( this.suit == Suit.Hearts || this.suit == Suit.Diamonds ) {
+                return "Card-red";
+            }
+            else if ( this.suit == Suit.Spades || this.suit == Suit.Clubs ) {
+                return "Card-black";
+            }
+            else {
+                return "";
+            }
         }
 
 }

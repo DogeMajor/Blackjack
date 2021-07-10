@@ -1,9 +1,9 @@
-import { Card } from "./card.model";
+import { Card, Suit } from "./card.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
 import { CardDeck } from "./cardDeck.model";
 //import { Injectable } from "@angular/core";
-import { Component, OnInit, Input, NgModule } from "@angular/core";
+import { Component, OnInit, Input, NgModule, Type } from "@angular/core";
 import { ɵInternalFormsSharedModule } from "@angular/forms";
 
 
@@ -12,6 +12,7 @@ import { ɵInternalFormsSharedModule } from "@angular/forms";
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"]
 })
+
 export class GameComponent implements OnInit{
     //constructor( public deck: CardDeck, public players: Player[], 
     //    public pot: number = 0, public round: number = 1) {}
@@ -132,4 +133,5 @@ export class GameComponent implements OnInit{
             player.deal(cards);
         }
     }
+
 }
