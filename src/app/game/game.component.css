@@ -1,75 +1,124 @@
-input.ng-dirty.ng-invalid { border: 2px solid #ff0000 }
-input.ng-dirty.ng-valid { border: 2px solid #6bc502 }
-:root {
-    --primary-color: #fff;
-    --background-color: #990e0e;
-    --text-color: #2a0f75;
+
+.status { grid-area: header; }
+.actions { grid-area: menu; }
+.PlayerUpper { grid-area: main-upper; }
+.PlayerLower { grid-area: main-lower; }
+.results { grid-area: right; }
+.bet { grid-area: footer; }
+
+.grid-container {
+  display: grid;
+  grid-template-areas:
+    'header header header header header header'
+    'menu main-upper main-upper main-upper right right'
+    'menu main-lower main-lower main-lower right right'
+    'menu footer footer footer footer footer';
+  grid-gap: 10px;
+  background-color: rgb(6, 65, 21);/*Change to green when merging*/
+  padding: 10px;
 }
 
-button {
-    color: red;
+.grid-container > div {
+  background-color: rgb(6, 65, 21);
+  text-align: center;
+  padding: 20px 0;
+  font-size: 30px;
+  color: rgb(216, 213, 24)
 }
 
-.container-fluid {
-    background-color: rgb(6, 65, 21);
-}
-
-.top {
+.Player {
     text-align: left;
+    float: left;
 }
 
-h1 {
+.Results {
+    font-size: 30px;
+    color:rgb(216, 213, 24)
+}
+
+
+
+.button {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 15px 32px;
     text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+    margin: 20px 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    height: 2.5em;
+  }
+
+.button_small {
+    width: 5em;
 }
 
-.bottom {
-    text-align: right;
+.button_big {
+    width: 10.8em;
 }
-  
+
+.button_disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.inputBet {
+    background-color: white;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 30px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 2px;
+  }
 
 .Card {
     background-color:white;
-    display: flex;
-    margin: 0 auto;
+    margin: 5px;
     display: block;
     position: relative;
     border: 1px solid #000;
     border-radius: .3em;
-    height: 7.5em;
-    width: 6em;
-    float:left;
+    height: 5.6em;
+    width: 4.0em;
+    float: left;
+    
 }
 
 .Card_back {
     background-color:red;
-    display: flex;
-    margin: 0 auto;
-    display: block;
-    position: relative;
-    border: 1px solid #000;
-    border-radius: .3em;
-    height: 7.5em;
-    width: 6em;
-    float:left;
 }
 
-/*.Card__caption {
-    
-    position: absolute;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    width: 1px;
-    margin: -1px;
-    padding: 0;
-    border: 0;
-    
-}*/
 
 .Card-red {
-  color: red;
+    color: red;
 }
 
 .Card-black {
-  color: black;
+    color: black;
+}
+
+.Card-text {
+    font-size: 28px;
+}
+
+.Card-top {
+    text-align: left;
+}
+
+.Card-middle {
+    font-size: 56px;
+    text-align: center;
+}
+
+.Card-bottom {
+    text-align: right;
 }
