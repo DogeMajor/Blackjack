@@ -20,6 +20,10 @@
             <button class="button button_small" (click)="hit()">Hit</button>
             <button class="button button_small" (click)="stand()">Stand</button>
         </div>
+        <div *ngIf="!gameOver && !user.emptyHand && canDouble">
+            <button class="button button_big" (click)="double()">Double</button>
+        </div>
+
     </div>
 
     <div class="PlayerUpper">Dealer
@@ -34,10 +38,17 @@
                     </div>
                 </div>
                 <div *ngIf="i!=0 && !gameOver">
-                    <div class="Card_back Card"></div>
+                    <div class="Card_contour Card"></div>
                 </div>
             </div>
             <h4>Best hand: {{ dealer.bestHand }}</h4>
+        </div>
+        <div class="col" *ngIf="dealer.cards.length == 0">
+            <div *ngFor="let i of [0,1]">
+                <div class="Card Card_contour">
+                </div>
+            </div>
+            <h4>Best hand: 0</h4>
         </div>
     </div>
 
@@ -52,6 +63,13 @@
                     </div>
                 </div>
                 <h4>Best hand: {{ user.bestHand }}</h4>
+            </div>
+            <div class="col" *ngIf="user.cards.length == 0">
+                <div *ngFor="let i of [0,1]">
+                    <div class="Card Card_contour">
+                    </div>
+                </div>
+                <h4>Best hand: 0</h4>
             </div>
     </div>
 
@@ -73,7 +91,7 @@
     
         <div *ngIf="user.bet == 0 && !pot && !gameOver">
             <input class="inputBet" type="number" placeholder="Enter bet size here" #betVal/>
-            <button class="button" (click)="bet(+betVal.value)">Bet</button>
+            <button class="button button_left button_small" (click)="bet(+betVal.value)">Bet</button>
         </div>
     </div>
 

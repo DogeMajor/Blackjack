@@ -66,6 +66,10 @@
     cursor: not-allowed;
 }
 
+.button_left {
+    float: left;
+}
+
 .inputBet {
     background-color: white;
     border: none;
@@ -73,11 +77,13 @@
     padding: 15px 32px;
     text-align: left;
     text-decoration: none;
-    display: inline-block;
+    /*display: inline-block;*/
     font-size: 30px;
-    margin: 4px 2px;
+    /*margin: 4px 2px;*/
+    margin: 20px 10px;
     cursor: pointer;
     border-radius: 2px;
+    float: left;
   }
 
 .Card {
@@ -95,6 +101,11 @@
 
 .Card_back {
     background-color:red;
+}
+
+.Card_contour {
+    background-color:rgb(6, 65, 21);
+    border: 5px solid white;
 }
 
 

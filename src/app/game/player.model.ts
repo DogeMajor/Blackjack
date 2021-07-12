@@ -31,7 +31,7 @@ export class Player {
         }
         else {
             this.money -= amount;
-            this.bet = amount;
+            this.bet += amount; // For doubling!
         }
     }
 

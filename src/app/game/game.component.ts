@@ -1,9 +1,8 @@
-import { Card, Suit } from "./card.model";
+import { Card } from "./card.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
 import { CardDeck } from "./cardDeck.model";
-//import { Injectable } from "@angular/core";
-import { Component, OnInit, Input, NgModule, Type } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 
 
 @Component({
@@ -16,7 +15,6 @@ export class GameComponent implements OnInit{
 
     @Input() pot: number = 0;
     @Input() round: number = 1;
-    public otherPlayers: Player[] = [];
     public gameOver: boolean = false;
     public user: Player;
     public dealer: Player;
@@ -24,7 +22,6 @@ export class GameComponent implements OnInit{
     constructor( public deck: CardDeck) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
         this.user = new Player([], 1000, PlayerType.User, "User");        
-
     }
     
     ngOnInit() {
@@ -42,10 +39,6 @@ export class GameComponent implements OnInit{
         let amount: number = this.pot / this.howManyPlayers;
         this.user.transferMoney(amount);
         this.dealer.transferMoney(amount);
-        for (let player of this.otherPlayers){
-            player.clearHand();
-            player.transferMoney(amount);
-        }
         this.pot = 0;
         this.round = 1;
         this.gameOver = false;
@@ -54,13 +47,14 @@ export class GameComponent implements OnInit{
     bet(amount: number) {
         if (this.user.emptyHand && amount > 0) {
             this.clear();
-            this.user.transferMoney(-amount);
-            this.dealer.transferMoney(-amount);
+            //this.user.transferMoney(-amount);
+            //this.dealer.transferMoney(-amount);
+            this.user.setBet(amount);
+            this.dealer.setBet(amount);
             this.pot += amount * 2;
             this.dealTo(this.user, 2);
             this.dealTo(this.dealer, 2);
             if (this.user.bestHand == 21 || this.dealer.bestHand == 21) {
-            //if (!this.user.emptyHand || this.dealer.bestHand == 21) {
                 this.gameOver = true;
                 this.endGame();
                 this.round++;
@@ -68,7 +62,6 @@ export class GameComponent implements OnInit{
             else {
                 this.round++;
             }
-            
         }
         else {
             alert("This action is not allowed!");
@@ -76,7 +69,7 @@ export class GameComponent implements OnInit{
     }
 
     get howManyPlayers() {
-        return 2 + this.otherPlayers.length;
+        return 2;
     }
 
     get cardsLeft() {
@@ -149,8 +142,29 @@ export class GameComponent implements OnInit{
         }
     }
 
-    disableButton(name: string) {
-        alert(name + "-button is disabled!");
+    get canDouble() {
+        return this.playerActionsAreAllowed() && this.user.cards.length == 2 && (this.user.money - this.user.bet) >= 0
+    }
+
+    double() {
+        if ( this.canDouble ){
+            console.log('Doubling...');
+            this.user.setBet(this.user.bet);
+            this.dealer.setBet(this.user.bet);
+            this.dealTo(this.user, 1);
+            this.round++;
+            if (this.user.bestHand >= 21) {
+                this.gameOver = true;
+                this.endGame();
+            }
+            else {
+                this.stand();
+            }
+            
+        }
+        else {
+            alert("This action is not allowed!");
+        }
     }
 
     stand() {
@@ -169,11 +183,39 @@ export class GameComponent implements OnInit{
         }
     }
 
+    get canSplit() {
+        return this.canDouble && this.user.cards[0].num == this.user.cards[1].num;
+    }
+
+    split() {
+        if ( this.canSplit ){
+            console.log('Splitting...');
+            this.user.setBet(this.user.bet);
+            this.dealTo(this.user, 1);
+            this.round++;
+            if (this.user.bestHand >= 21) {
+                this.gameOver = true;
+                this.endGame();
+            }
+            else {
+                this.stand();
+            }
+            
+        }
+        else {
+            alert("This action is not allowed!");
+        }
+    }
+
     dealTo(player: Player, amount: number, faceDown: boolean = false) {
         if (this.deck.length - amount >= 0) {
             let cards: Card[] = this.deck.popRandomCards(amount);
             player.deal(cards);
         }
+    }
+
+    disableButton(name: string) {
+        alert(name + "-button is disabled!");
     }
 
 }
