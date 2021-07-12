@@ -1,87 +1,80 @@
-<div class="container-fluid">
-    
-    <div class="row">
-        <div class="col bg-dark text-white">
-            <a class="navbar-brand">BLACKJACK</a>
-        </div>
-    </div>
-    <div class="row mt-2">
-        <a>
-            Round: {{ round }}
-        </a>
-        <a>
-            Amount of players: {{ howManyPlayers }}
-        </a>
-        <a>
-            Cards left: {{ cardsLeft }}
-        </a>
-        <a>
-            Game over: {{ gameOver }}
-        </a>
 
-        
-    </div>
-    <div class="card m-1 p-1 bg-light">
-            <h4>
-              Name: {{dealer.name}}
-              Money: {{dealer.money}}
-              Bet: {{dealer.bet}}
-              
-            </h4>
-            <div class="card" *ngIf="dealer.cards.length != 0">
-                <div *ngFor="let card of dealer.cards; index as i" [class]='card.colorClass'>
-                    <div *ngIf="i==0 || gameOver">
-                    <div class="Card">
-                        <div class="top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
-                        <h1>{{card.suit}}</h1>
-                        <div class="bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
-                    </div>
-                    </div>
-                    <div *ngIf="i!=0 && !gameOver">
-                    <div class="Card_back">
-                        
-                    </div>
-                    </div>
-                </div>
-                <h4>Best hand: {{ dealer.bestHand }}</h4>
-            </div>
-            
-            
-          </div>
-    <div class="card m-1 p-1 bg-light">
-        <h4>
-          Name: {{user.name}}
-          Money: {{user.money}}
-          Bet: {{user.bet}}
-          
-        </h4>
-        <div class="card" *ngIf="user.cards.length != 0">
-            <div *ngFor="let card of user.cards" [class]='card.colorClass'>
-                <!--<label class="'Card__suit-' + card.suit"> {{ card.suit}} </label>-->
-                <div class="Card">
-                    <div class="top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
-                    <h1>{{card.suit}}</h1>
-                    <div class="bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
-                </div>
-            </div>
-            <h4>Best hand: {{ user.bestHand }}</h4>
+<div class="grid-container">
+
+    <div class="status">Game Status
+        <br>
+        <label>
+            Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }}
+        </label>
+    </div>
+
+    <div class="actions">Menu
+        <br>
+        <div *ngIf="gameOver || user.emptyHand">
+            <button class="button button_big" (click)="restart()">New game</button>
         </div>
-        
-        <div class="col">
-            <div class="card" *ngIf="user.bet == 0">
-                <input type="number" placeholder="Enter bet size here" #betVal/>
-                <div class="col-auto">
-                    <button class="btn btn-primary" (click)="bet(+betVal.value)">
-                        Bet
-                    </button>
+        <div *ngIf="!gameOver && !user.emptyHand">
+            <button class="button button_big button_disabled" (click)="disableButton('restart')">New game</button>
+        </div>
+        <div *ngIf="!gameOver && !user.emptyHand">
+            <button class="button button_small" (click)="hit()">Hit</button>
+            <button class="button button_small" (click)="stand()">Stand</button>
+        </div>
+    </div>
+
+    <div class="PlayerUpper">Dealer
+        <br>
+        <div class="col" *ngIf="dealer.cards.length != 0">
+            <div *ngFor="let card of dealer.cards; index as i" [class]='card.colorClass'>
+                <div *ngIf="i==0 || gameOver">
+                    <div class="Card">
+                        <div class="Card-text Card-top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
+                        <h1 class="Card-text Card-middle">{{card.suit}}</h1>
+                        <div class="Card-text Card-bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
+                    </div>
+                </div>
+                <div *ngIf="i!=0 && !gameOver">
+                    <div class="Card_back Card"></div>
                 </div>
             </div>
-            
-        </div>
-      </div>
+            <h4>Best hand: {{ dealer.bestHand }}</h4>
+        </div>
+    </div>
 
-<h1> Pot: {{ pot }} </h1>
-    <button class="root" nbButton outline status="danger" (click)="restart()">Restart the game</button>
-    <button nbButton outline status="danger" (click)="hit()">Hit</button>
-    <button nbButton outline status="danger" (click)="stand()">Stand</button>
-</div>
+    <div class="PlayerLower Player">Player: ${{user.money.toString()}}
+        <br>
+            <div class="col" *ngIf="user.cards.length != 0">
+                <div *ngFor="let card of user.cards" [class]='card.colorClass'>
+                    <div class="Card">
+                        <div class="Card-text Card-top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
+                        <h1 class="Card-text Card-middle">{{card.suit}}</h1>
+                        <div class="Card-text Card-bottom"><span>{{card.suit}}</span><span>{{card.symbol}}</span></div>
+                    </div>
+                </div>
+                <h4>Best hand: {{ user.bestHand }}</h4>
+            </div>
+    </div>
+
+    <div class="results Results">Results
+        <br>
+        <div *ngIf="gameOver && winnerNames.length == 1">
+            <label class="Card-text">Winner: {{winnerNames[0]}}</label>
+        </div>
+        <div *ngIf="gameOver && winnerNames.length > 1">Several winners:
+            <div *ngFor="let name of winnerNames">
+                <label>{{name}}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="bet">
+        <br>
+        <h1> Pot: ${{ pot }} </h1>
+    
+        <div *ngIf="user.bet == 0 && !pot && !gameOver">
+            <input class="inputBet" type="number" placeholder="Enter bet size here" #betVal/>
+            <button class="button" (click)="bet(+betVal.value)">Bet</button>
+        </div>
+    </div>
+
+  </div>

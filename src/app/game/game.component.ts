@@ -13,8 +13,7 @@ import { Component, OnInit, Input, NgModule, Type } from "@angular/core";
 })
 
 export class GameComponent implements OnInit{
-    //constructor( public deck: CardDeck, public players: Player[], 
-    //    public pot: number = 0, public round: number = 1) {}
+
     @Input() pot: number = 0;
     @Input() round: number = 1;
     public otherPlayers: Player[] = [];
@@ -24,9 +23,7 @@ export class GameComponent implements OnInit{
 
     constructor( public deck: CardDeck) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
-        this.user = new Player([], 1000, PlayerType.User, "User");
-        //this.dealer.moreCards = this.dealer.wantMoreCards();
-        
+        this.user = new Player([], 1000, PlayerType.User, "User");        
 
     }
     
@@ -43,7 +40,6 @@ export class GameComponent implements OnInit{
         this.dealer.clearHand();
         this.user.clearHand();
         let amount: number = this.pot / this.howManyPlayers;
-        
         this.user.transferMoney(amount);
         this.dealer.transferMoney(amount);
         for (let player of this.otherPlayers){
@@ -56,13 +52,27 @@ export class GameComponent implements OnInit{
     }
 
     bet(amount: number) {
-        this.clear();
-        this.user.transferMoney(-amount);
-        this.dealer.transferMoney(-amount);
-        this.pot += amount * 2;
-        this.dealTo(this.user, 2);
-        this.dealTo(this.dealer, 2);
-        this.round++;
+        if (this.user.emptyHand && amount > 0) {
+            this.clear();
+            this.user.transferMoney(-amount);
+            this.dealer.transferMoney(-amount);
+            this.pot += amount * 2;
+            this.dealTo(this.user, 2);
+            this.dealTo(this.dealer, 2);
+            if (this.user.bestHand == 21 || this.dealer.bestHand == 21) {
+            //if (!this.user.emptyHand || this.dealer.bestHand == 21) {
+                this.gameOver = true;
+                this.endGame();
+                this.round++;
+            }
+            else {
+                this.round++;
+            }
+            
+        }
+        else {
+            alert("This action is not allowed!");
+        }
     }
 
     get howManyPlayers() {
@@ -81,6 +91,10 @@ export class GameComponent implements OnInit{
         }
         sortedPlayers = sortedPlayers.sort((a: Player, b: Player) => b.bestHand - a.bestHand);
         return sortedPlayers.filter(player => player.bestHand == sortedPlayers[0].bestHand); 
+    }
+
+    get winnerNames() {
+        return this.winners.map(w=>w.name);
     }
 
     get hasBlackjack() {
@@ -102,27 +116,57 @@ export class GameComponent implements OnInit{
             console.log(winner);
         }
         this.distributeWinnings(winners);
-        //this.pot = 0;
-        //this.clear;
+        this.pot = 0;
+        console.log("Pot is currently: "+this.pot.toString())
     }
 
-    hit(): boolean {
-        let amount: number = (this.round == 1) ? 2 : 1;
-        let cardsLeft: number = this.deck.length;
-        this.dealTo(this.user, amount);
-        this.round++;
-        return this.deck.length == cardsLeft;
+    playerActionsAreAllowed(): boolean {
+        if (this.user.emptyHand || this.gameOver || this.pot <= 0) {
+            return false;
+        }
+        else if(this.user.bestHand >= 21) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    hit() {
+        if ( this.playerActionsAreAllowed() ){
+            console.log('Hitting with amount...');
+            let amount: number = (this.round == 1) ? 2 : 1;
+            console.log(amount)
+            this.dealTo(this.user, amount);
+            if (this.user.bestHand >= 21) {
+                this.gameOver = true;
+                this.endGame();
+            }
+            this.round++;
+        }
+        else {
+            alert("This action is not allowed!");
+        }
+    }
+
+    disableButton(name: string) {
+        alert(name + "-button is disabled!");
     }
 
     stand() {
-        let playOn: boolean = true && this.hasBlackjack.length == 0;
-        while (playOn && this.dealer.bestHand <= 16) {
-            let amount: number = (this.round == 1) ? 2 : 1;
-            this.dealTo(this.dealer, amount);
-            this.round++;
+        if ( this.playerActionsAreAllowed() ){
+            let playOn: boolean = true && this.hasBlackjack.length == 0;
+            while (playOn && this.dealer.bestHand <= 16) {
+                let amount: number = (this.round == 1) ? 2 : 1;
+                this.dealTo(this.dealer, amount);
+                this.round++;
+            }
+            this.gameOver = true;
+            this.endGame();
         }
-        this.gameOver = true;
-        this.endGame();
+        else {
+            alert("This action is not allowed!");
+        }
     }
 
     dealTo(player: Player, amount: number, faceDown: boolean = false) {
