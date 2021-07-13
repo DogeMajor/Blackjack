@@ -1,4 +1,5 @@
 import { Card } from "./card.model";
+import { Hand } from "./hand.model";
 
 
 export enum PlayerType {
@@ -8,18 +9,18 @@ export enum PlayerType {
 }
 
 export class Player {
-    public cards: Card[] = [];
     public bet: number = 0;
+    public hand: Hand;
+    
     
     constructor(
         public cardsVar: Card[],
         public money: number,
         public type: PlayerType,
         public name: string,
+        
         ) {
-        for (let card of cardsVar) {
-            this.cards.push(card);
-        }
+        this.hand = new Hand(cardsVar)
         this.money = money;
         this.type = type;
         this.name = name;
@@ -27,7 +28,7 @@ export class Player {
 
     setBet(amount: number) {
         if (this.money - amount < 0) {
-            alert("Player does not have sufficient funds for the bet!");
+            alert("Player has insufficient funds for the bet!");
         }
         else {
             this.money -= amount;
@@ -35,35 +36,16 @@ export class Player {
         }
     }
 
-    get hand(): Card[] {
-        return this.cards;
-    }
-
     get emptyHand(): boolean {
-        return this.cards.length == 0;
+        return this.hand.emptyHand;
     }
 
     get bestHand(): number {
-        let handVals: number[] = this.handValues.filter(c=>c<22);
-        if ( handVals.length == 0 ) {
-            return this.handValues[0];
-        }
-        else {
-            return handVals[handVals.length-1];
-        }
+        return this.hand.bestHand;
     }
 
     get handValues(): number[] {
-        let uniqueCards: Card[] = this.cards.filter(c => c.num != 14);
-        let uniqueValues: number[] = uniqueCards.map(c => c.value);
-        let uniqueValue = uniqueValues.reduce(function(first, second){ return first + second })
-        let aces: number = this.cards.length - uniqueCards.length;
-        if ( aces == 0 ) {
-            return [uniqueValue];
-        }
-        else {
-            return [uniqueValue+aces, uniqueValue+aces+10]
-        } 
+        return this.hand.handValues;
     }
 
     transferMoney(amount: number) {
@@ -71,13 +53,11 @@ export class Player {
     }
 
     clearHand() {
-        this.cards = [];
         this.bet = 0;
+        this.hand.clearHand();
     }
 
     deal(cards: Card[]) {
-        for (let card of cards) {
-            this.cards.push(card);
-        } 
+        this.hand.deal(cards);
     }
 }

@@ -110,7 +110,6 @@ export class GameComponent implements OnInit{
         }
         this.distributeWinnings(winners);
         this.pot = 0;
-        console.log("Pot is currently: "+this.pot.toString())
     }
 
     playerActionsAreAllowed(): boolean {
@@ -143,7 +142,7 @@ export class GameComponent implements OnInit{
     }
 
     get canDouble() {
-        return this.playerActionsAreAllowed() && this.user.cards.length == 2 && (this.user.money - this.user.bet) >= 0
+        return this.playerActionsAreAllowed() && this.user.hand.cards.length == 2 && (this.user.money - this.user.bet) >= 0
     }
 
     double() {
@@ -159,8 +158,7 @@ export class GameComponent implements OnInit{
             }
             else {
                 this.stand();
-            }
-            
+            }  
         }
         else {
             alert("This action is not allowed!");
@@ -184,23 +182,37 @@ export class GameComponent implements OnInit{
     }
 
     get canSplit() {
-        return this.canDouble && this.user.cards[0].num == this.user.cards[1].num;
+        return this.canDouble && this.user.hand.canSplit;
     }
 
     split() {
-        if ( this.canSplit ){
-            console.log('Splitting...');
-            this.user.setBet(this.user.bet);
+        //if ( this.canSplit ){
+        if ( true ){
+
+            console.log('Splitting...');// @ts-ignore
+            let poppedCard: Card = this.user.cards.pop();
+            let dealerHand: Card[] = this.dealer.hand.cards;
+            let originalBet: number = this.user.bet;
             this.dealTo(this.user, 1);
             this.round++;
             if (this.user.bestHand >= 21) {
                 this.gameOver = true;
                 this.endGame();
             }
-            else {
-                this.stand();
+            while (!this.gameOver) {
+                console.log("Pick the approriate action for your first hand");
             }
+            console.log("Starting your second hand from the split");
+            this.user.clearHand();
+            this.dealer.bet = 0;
+            this.round = 1;
+            this.pot = 0;
             
+            this.user.hand.cards = [poppedCard];
+            this.user.setBet(originalBet);
+            this.dealer.setBet(originalBet);
+            this.pot += originalBet * 2;
+            this.dealTo(this.user, 1);
         }
         else {
             alert("This action is not allowed!");
