@@ -60,4 +60,10 @@ export class Player {
     deal(cards: Card[]) {
         this.hand.deal(cards);
     }
+
+    split(): Hand {// @ts-ignore
+        let poppedCard: card = this.hand.cards.pop();
+        this.hand.split = true;
+        return new Hand([poppedCard], false, true);
+    }
 }

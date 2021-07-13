@@ -21,6 +21,12 @@ export class Hand {
             this.finished = false;
             this.split = false;
         }
+
+        cutEnd(lastIndex: number) {
+            if (lastIndex <= this.cards.length){
+                this.cards = this.cards.slice(0, lastIndex);
+            }
+        }
         
         get howManyCards(): number {
             return this.cards.length;

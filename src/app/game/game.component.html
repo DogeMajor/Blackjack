@@ -4,7 +4,8 @@
     <div class="status">Game Status
         <br>
         <label>
-            Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }}
+            Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }} 
+            SplitBet: {{ splitBet }}  Split hands: {{ splitHands.length }}
         </label>
     </div>
 
@@ -23,11 +24,11 @@
         <div *ngIf="!gameOver && !user.emptyHand && canDouble">
             <button class="button button_big" (click)="double()">Double</button>
         </div>
-        <button class="button button_big" (click)="split()">Split</button>
+        <button *ngIf="canSplit" class="button button_big" (click)="split()">Split</button>
 
     </div>
 
-    <div class="PlayerUpper">Dealer
+    <div class="PlayerUpper">Dealer: ${{dealer.money.toString()}}
         <br>
         <div class="col" *ngIf="dealer.hand.howManyCards != 0">
             <div *ngFor="let card of dealer.hand.cards; index as i" [class]='card.colorClass'>
