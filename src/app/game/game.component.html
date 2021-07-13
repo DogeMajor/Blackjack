@@ -4,7 +4,8 @@
     <div class="status">Game Status
         <br>
         <label>
-            Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }}
+            Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }} 
+            SplitBet: {{ splitBet }}  Split hands: {{ splitHands.length }}
         </label>
     </div>
 
@@ -20,12 +21,17 @@
             <button class="button button_small" (click)="hit()">Hit</button>
             <button class="button button_small" (click)="stand()">Stand</button>
         </div>
+        <div *ngIf="!gameOver && !user.emptyHand && canDouble">
+            <button class="button button_big" (click)="double()">Double</button>
+        </div>
+        <button *ngIf="canSplit" class="button button_big" (click)="split()">Split</button>
+
     </div>
 
-    <div class="PlayerUpper">Dealer
+    <div class="PlayerUpper">Dealer: ${{dealer.money.toString()}}
         <br>
-        <div class="col" *ngIf="dealer.cards.length != 0">
-            <div *ngFor="let card of dealer.cards; index as i" [class]='card.colorClass'>
+        <div class="col" *ngIf="dealer.hand.howManyCards != 0">
+            <div *ngFor="let card of dealer.hand.cards; index as i" [class]='card.colorClass'>
                 <div *ngIf="i==0 || gameOver">
                     <div class="Card">
                         <div class="Card-text Card-top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
@@ -34,17 +40,24 @@
                     </div>
                 </div>
                 <div *ngIf="i!=0 && !gameOver">
-                    <div class="Card_back Card"></div>
+                    <div class="Card_contour Card"></div>
                 </div>
             </div>
             <h4>Best hand: {{ dealer.bestHand }}</h4>
+        </div>
+        <div class="col" *ngIf="dealer.hand.howManyCards == 0">
+            <div *ngFor="let i of [0,1]">
+                <div class="Card Card_contour">
+                </div>
+            </div>
+            <h4>Best hand: 0</h4>
         </div>
     </div>
 
     <div class="PlayerLower Player">Player: ${{user.money.toString()}}
         <br>
-            <div class="col" *ngIf="user.cards.length != 0">
-                <div *ngFor="let card of user.cards" [class]='card.colorClass'>
+            <div class="col" *ngIf="user.hand.howManyCards != 0">
+                <div *ngFor="let card of user.hand.cards" [class]='card.colorClass'>
                     <div class="Card">
                         <div class="Card-text Card-top"><span>{{card.symbol}}</span><span>{{card.suit}}</span></div>
                         <h1 class="Card-text Card-middle">{{card.suit}}</h1>
@@ -52,6 +65,13 @@
                     </div>
                 </div>
                 <h4>Best hand: {{ user.bestHand }}</h4>
+            </div>
+            <div class="col" *ngIf="user.hand.howManyCards == 0">
+                <div *ngFor="let i of [0,1]">
+                    <div class="Card Card_contour">
+                    </div>
+                </div>
+                <h4>Best hand: 0</h4>
             </div>
     </div>
 
@@ -73,7 +93,7 @@
     
         <div *ngIf="user.bet == 0 && !pot && !gameOver">
             <input class="inputBet" type="number" placeholder="Enter bet size here" #betVal/>
-            <button class="button" (click)="bet(+betVal.value)">Bet</button>
+            <button class="button button_left button_small" (click)="bet(+betVal.value)">Bet</button>
         </div>
     </div>
 
