@@ -1,11 +1,10 @@
-
 <div class="grid-container">
 
     <div class="status">Game Status
         <br>
         <label>
             Round: {{ round }} Amount of players: {{ howManyPlayers }} Cards left: {{ cardsLeft }} Game over: {{ gameOver }} 
-            SplitBet: {{ splitBet }}  Split hands: {{ splitHands.length }}
+            SplitBet: {{ splitBet }}  Split hands: {{ splitHands.length }} Earlier Bet: {{ earlierBet }}
         </label>
     </div>
 
@@ -95,7 +94,7 @@
         <h1> Pot: ${{ pot }} </h1>
     
         <div *ngIf="canBet">
-            <input class="inputBet" type="number" placeholder="Enter bet size here" #betVal/>
+            <input class="inputBet" type="number" value="{{earlierBet}}" #betVal/>
             <button class="button button_left button_small" (click)="bet(+betVal.value)">Bet</button>
         </div>
     </div>

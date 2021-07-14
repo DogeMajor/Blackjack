@@ -3,6 +3,7 @@ import { Hand } from "./hand.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
 import { CardDeck } from "./cardDeck.model";
+import { ButtonSounds } from "./buttonSounds.model";
 import { Component, OnInit, Input } from "@angular/core";
 
 
@@ -21,8 +22,9 @@ export class GameComponent implements OnInit{
     public dealer: Player;
     public splitHands: Hand[] = []
     public splitBet: number = 0;
+    public earlierBet: number = 0;
 
-    constructor( public deck: CardDeck) {
+    constructor( public deck: CardDeck, public soundFiles: ButtonSounds) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
         this.user = new Player([], 1000, PlayerType.User, "User");        
     }
@@ -32,6 +34,8 @@ export class GameComponent implements OnInit{
     }
 
     restart() {
+        this.soundFiles = new ButtonSounds();
+        this.soundFiles.play("shuffle");
         this.deck = new CardDeck();
         this.clear();
     }
@@ -59,6 +63,7 @@ export class GameComponent implements OnInit{
         if (this.user.emptyHand && amount > 0) {
             this.user.setBet(amount);
             this.dealer.setBet(amount);
+            this.earlierBet = amount;
             this.pot += amount * 2;
             this.dealTo(this.user, 2);
             this.dealTo(this.dealer, 2);
@@ -67,6 +72,7 @@ export class GameComponent implements OnInit{
                 this.endGame();
             }
             this.round++;
+            this.soundFiles.play("coins");
             
         }
         else {
@@ -118,14 +124,11 @@ export class GameComponent implements OnInit{
         for (let player of winners) {
             player.transferMoney(winnings);
         }
+        this.soundFiles.play("coins");
     }
 
     endGame() {
         let winners: Player[] = this.winners;
-        console.log("The game ended. The winners are:")
-        for (let winner of winners) {
-            console.log(winner);
-        }
         this.distributeWinnings(winners);
         this.pot = 0;
     }
@@ -138,23 +141,23 @@ export class GameComponent implements OnInit{
         
         if (this.splitHands.length > 0) {
             this.gameOver = false;
-            console.log("Starting the split hand")
             this.user.clearHand(); // @ts-ignore
             this.user.deal(this.splitHands.pop().cards);
+            
             this.dealTo(this.user, 1);
             this.user.hand.split = true;
             this.dealer.hand.cutEnd(2);
             this.user.setBet(this.splitBet);
             this.dealer.setBet(this.splitBet);
             this.pot = 2 * this.splitBet;
+            if (this.splitHands.length == 0) {
+                this.splitBet = 0;
+            }
             if (this.user.bestHand == 21 || this.dealer.bestHand == 21) {
                 this.gameOver = true;
                 this.endGame();
             }
             this.round = 2;
-        }
-        else {
-            this.splitBet = 0;
         }
     }
 
@@ -194,7 +197,7 @@ export class GameComponent implements OnInit{
 
     double() {
         if ( this.canDouble ){
-            console.log('Doubling...');
+            this.soundFiles.play("coins");
             this.pot += 2 * this.user.bet
             this.dealer.setBet(this.user.bet);
             this.user.setBet(this.user.bet);
@@ -233,22 +236,16 @@ export class GameComponent implements OnInit{
     }
 
     get canSplit(): boolean {
-        return true;//this.canDouble && this.user.hand.canSplit;
+        return this.canDouble && this.user.hand.canSplit;
     }
 
     split() {
-        if ( this.canSplit ){
-
-            console.log('Splitting...');// @ts-ignore
+        if ( this.canSplit ){// @ts-ignore
             this.splitHands.push(this.user.split())
-            
             this.splitBet = this.user.bet;
             this.dealTo(this.user, 1);
-            console.log("User hand after the split:")
-            for (let card of this.user.hand.cards) {
-                console.log(card.num, card.symbol);
-            }
             this.round++;
+            this.soundFiles.play("placement");
             if (this.user.bestHand >= 21) {
                 this.gameOver = true;
                 this.endGame();
@@ -263,11 +260,12 @@ export class GameComponent implements OnInit{
         if (this.deck.length - amount >= 0) {
             let cards: Card[] = this.deck.popRandomCards(amount);
             player.deal(cards);
+            this.soundFiles.play("flick");
         }
     }
 
     disableButton(name: string) {
+        this.soundFiles.play("warning");
         alert(name + "-button is disabled!");
     }
-
 }

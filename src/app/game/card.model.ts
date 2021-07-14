@@ -1,11 +1,9 @@
-
 export enum Suit {
     Diamonds = '\u2666',
     Spades = '\u2660',
     Hearts = '\u2665',
     Clubs = '\u2663',
 }
-
 
 export enum FaceCardValue {
     A = 14,
@@ -20,7 +18,6 @@ export class Card {
     public num: number;
     public value: number = -1;
     public symbol: string | null = null;
-
 
     constructor(
         public suitVar: Suit,
@@ -40,8 +37,7 @@ export class Card {
             else if (numVar == 14) {
                 this.value = 11;
                 this.symbol = FaceCardValue[this.num].toString();
-            }
-            
+            } 
         }
     
         get cardValue(): number {
@@ -59,5 +55,4 @@ export class Card {
                 return "";
             }
         }
-
 }
