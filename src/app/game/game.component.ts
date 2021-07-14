@@ -36,6 +36,10 @@ export class GameComponent implements OnInit{
         this.clear();
     }
 
+    get canRestart(): boolean {
+        return (this.user.emptyHand || this.gameOver) && !this.canResolveSplit;
+    }
+
     clear() {
         this.dealer.clearHand();
         this.user.clearHand();
@@ -47,13 +51,12 @@ export class GameComponent implements OnInit{
         this.gameOver = false;
     }
 
-    async delay(ms: number) {
-        await new Promise(resolve => setTimeout(()=>resolve(ms), ms)).then(()=>console.log("fired"));
+    get canBet(): boolean {
+        return this.user.bet == 0 && !this.pot && !this.gameOver;
     }
 
     bet(amount: number) {
         if (this.user.emptyHand && amount > 0) {
-            //this.clear();
             this.user.setBet(amount);
             this.dealer.setBet(amount);
             this.pot += amount * 2;
@@ -62,11 +65,9 @@ export class GameComponent implements OnInit{
             if (this.user.bestHand == 21 || this.dealer.bestHand == 21) {
                 this.gameOver = true;
                 this.endGame();
-                this.round++;
             }
-            else {
-                this.round++;
-            }
+            this.round++;
+            
         }
         else {
             alert("This action is not allowed!");
@@ -79,6 +80,18 @@ export class GameComponent implements OnInit{
 
     get cardsLeft() {
         return this.deck.length;
+    }
+
+    get dealerHand(): number {
+        if (this.gameOver) {
+            return this.dealer.bestHand;
+        }
+        else if(this.dealer.emptyHand) {
+            return 0;
+        }
+        else {
+            return this.dealer.hand.cards[0].value;
+        }
     }
 
     get winners() {
@@ -115,14 +128,16 @@ export class GameComponent implements OnInit{
         }
         this.distributeWinnings(winners);
         this.pot = 0;
-        if (this.splitHands.length == 0) {
-            this.splitBet = 0;
-        }
+    }
+
+    get canResolveSplit(): boolean {
+        return this.gameOver && this.splitHands.length > 0;
+    }
+
+    resolveSplit() {
         
         if (this.splitHands.length > 0) {
             this.gameOver = false;
-            console.log("Delaying the split hand...")
-            this.delay(3000)
             console.log("Starting the split hand")
             this.user.clearHand(); // @ts-ignore
             this.user.deal(this.splitHands.pop().cards);
@@ -137,7 +152,10 @@ export class GameComponent implements OnInit{
                 this.endGame();
             }
             this.round = 2;
-        } 
+        }
+        else {
+            this.splitBet = 0;
+        }
     }
 
     playerActionsAreAllowed(): boolean {
@@ -150,6 +168,10 @@ export class GameComponent implements OnInit{
         else {
             return true;
         }
+    }
+
+    get canHit(): boolean {
+        return this.playerActionsAreAllowed();
     }
 
     hit() {
@@ -191,8 +213,12 @@ export class GameComponent implements OnInit{
         }
     }
 
+    get canStand(): boolean {
+        return this.playerActionsAreAllowed();
+    }
+
     stand() {
-        if ( this.playerActionsAreAllowed() ){
+        if ( this.canStand ){
             let playOn: boolean = true && this.hasBlackjack.length == 0;
             while (playOn && this.dealer.bestHand <= 16) {
                 this.dealTo(this.dealer, 1);
@@ -206,22 +232,22 @@ export class GameComponent implements OnInit{
         }
     }
 
-    get canSplit() {
-        return this.canDouble && this.user.hand.canSplit;
+    get canSplit(): boolean {
+        return true;//this.canDouble && this.user.hand.canSplit;
     }
 
     split() {
-        //if ( this.canSplit ){
         if ( this.canSplit ){
 
             console.log('Splitting...');// @ts-ignore
             this.splitHands.push(this.user.split())
+            
+            this.splitBet = this.user.bet;
+            this.dealTo(this.user, 1);
             console.log("User hand after the split:")
             for (let card of this.user.hand.cards) {
                 console.log(card.num, card.symbol);
             }
-            this.splitBet = this.user.bet;
-            this.dealTo(this.user, 1);
             this.round++;
             if (this.user.bestHand >= 21) {
                 this.gameOver = true;
@@ -233,7 +259,7 @@ export class GameComponent implements OnInit{
         }
     }
 
-    dealTo(player: Player, amount: number, faceDown: boolean = false) {
+    dealTo(player: Player, amount: number) {
         if (this.deck.length - amount >= 0) {
             let cards: Card[] = this.deck.popRandomCards(amount);
             player.deal(cards);

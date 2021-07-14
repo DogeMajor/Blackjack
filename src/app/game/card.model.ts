@@ -38,7 +38,7 @@ export class Card {
                 this.symbol = FaceCardValue[this.num].toString();
             }
             else if (numVar == 14) {
-                this.value = -1;
+                this.value = 11;
                 this.symbol = FaceCardValue[this.num].toString();
             }
             
