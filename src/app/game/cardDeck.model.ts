@@ -1,5 +1,5 @@
 import { Card, Suit } from "./card.model";
-import { Injectable, OnInit, Input } from "@angular/core";
+import { Injectable } from "@angular/core";
 
 var allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]
 
