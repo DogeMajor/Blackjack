@@ -38,3 +38,21 @@ export class ButtonSounds {
         this.sounds.get(name).play();
     }
 }
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ButtonSoundsMock {
+
+    public sounds: Map<string, any>
+    
+    constructor() {
+        this.sounds = new Map<string, any>();   
+    }
+
+    play(name: string) {
+        console.log("The mocked class will never play any sounds or import sound files");
+        console.log("The real play function would have played the sound for " + name + "-method.")
+    }
+}
+

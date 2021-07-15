@@ -60,6 +60,7 @@ export class GameComponent implements OnInit{
     }
 
     bet(amount: number) {
+        console.log('betting...')
         if (this.user.emptyHand && amount > 0) {
             this.user.setBet(amount);
             this.dealer.setBet(amount);

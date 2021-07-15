@@ -50,6 +50,9 @@ export class Hand {
         }
     
         get handValues(): number[] {
+            if (this.emptyHand) {
+                return [];
+            }
             let uniqueCards: Card[] = this.cards.filter(c => c.num != 14);
             let uniqueValues: number[] = uniqueCards.map(c => c.value);
             let uniqueValue = uniqueValues.reduce(function(first, second){ return first + second })
