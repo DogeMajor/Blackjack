@@ -10,7 +10,6 @@ describe('GameComponent', () => {
     let component: GameComponent;
     let debugElement: DebugElement;
     let bindingElement: HTMLDivElement;
-    let labelElement: HTMLLabelElement;
 
 
   beforeEach(async () => {
@@ -22,15 +21,14 @@ describe('GameComponent', () => {
         GameComponent
       ],
     }).compileComponents();
-    TestBed.overrideComponent(
+    /*TestBed.overrideComponent(
         GameComponent,
         { set: { providers: [{ provide: ButtonSounds, useClass: ButtonSoundsMock }] } }
-    );
+    );*/
     fixture = TestBed.createComponent(GameComponent);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
     bindingElement = debugElement.query(By.css("div")).nativeElement;
-    labelElement = debugElement.query(By.css("label")).nativeElement;
     
   });
 
@@ -69,19 +67,12 @@ describe('GameComponent', () => {
 
 
   it(`Should find bet button`, () => {
-    //const fixture = TestBed.createComponent(GameComponent);
-    //const app = fixture.componentInstance;
-    let buttonEl = debugElement.query(By.css("button"));
-    console.log(buttonEl);
-    console.log(buttonEl.nativeElement.innerHTML);
-    //component.bet(1);
-    //fixture.detectChanges();
-    //expect(component.cardsLeft).toBe(48);
-    //expect(component.pot).toBe(2);
-
-    
-
-    //let buttonEl = bindingElement.children[0].query(By.css("div")).nativeElement;
+    fixture.detectChanges();
+    let inputEl = debugElement.query(By.css(".inputBet")).nativeElement;
+    expect(inputEl).toBeTruthy();
+    let betDivEl = debugElement.query(By.css(".bet")).query(By.css("div")).nativeElement;
+    expect(betDivEl.textContent).toContain("Bet");
+    expect(inputEl.value).toBe('0');
   });
 
   /*it(`Betting should function`, () => {

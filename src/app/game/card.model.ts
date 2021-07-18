@@ -1,3 +1,5 @@
+import { Injectable } from "@angular/core";
+
 export enum Suit {
     Diamonds = '\u2666',
     Spades = '\u2660',

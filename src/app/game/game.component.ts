@@ -2,8 +2,8 @@ import { Card } from "./card.model";
 import { Hand } from "./hand.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
-import { CardDeck } from "./cardDeck.model";
-import { ButtonSounds } from "./buttonSounds.model";
+import { CardDeck, CardDeckMock } from "./cardDeck.model";
+import { ButtonSounds, ButtonSoundsMock } from "./buttonSounds.model";
 import { Component, OnInit, Input } from "@angular/core";
 
 
@@ -12,7 +12,6 @@ import { Component, OnInit, Input } from "@angular/core";
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"]
 })
-
 export class GameComponent implements OnInit{
 
     @Input() pot: number = 0;
@@ -24,7 +23,7 @@ export class GameComponent implements OnInit{
     public splitBet: number = 0;
     public earlierBet: number = 0;
 
-    constructor( public deck: CardDeck, public soundFiles: ButtonSounds) {
+    constructor( public deck: CardDeck, public soundFiles: ButtonSounds ) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
         this.user = new Player([], 1000, PlayerType.User, "User");        
     }
@@ -270,3 +269,5 @@ export class GameComponent implements OnInit{
         alert(name + "-button is disabled!");
     }
 }
+
+

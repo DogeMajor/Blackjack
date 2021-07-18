@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 
 var allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]
 
+
 @Injectable({
     providedIn: 'root',
 })
@@ -27,6 +28,30 @@ export class CardDeck {
             let randomIndex = Math.floor(Math.random() * this.cards.length);
             cards.push(this.cards[randomIndex]);
             this.cards.splice(randomIndex, 1);
+        }
+        return cards;   
+    }
+}
+
+
+export class CardDeckMock {
+    public cards: Card[] = [];
+
+    constructor(public cardsVar: Card[]) {
+        for( let card of cardsVar) {
+            this.cards.push(card);
+        }
+    }
+
+    get length() {
+        return this.cards.length;
+    }
+
+    popRandomCards(amount: number = 1) {  // Pops the cards in the reversed order; not randomly!
+        let cards: Card[] = [];
+        for (let i = 0; i < amount; i++) {
+            //  @ts-ignore
+            cards.push(this.cards.pop());
         }
         return cards;   
     }
