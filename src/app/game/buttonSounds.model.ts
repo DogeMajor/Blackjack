@@ -59,27 +59,6 @@ export class ButtonSoundsMock {
     }
 
     play(name: string) {
-        console.log("The mocked class will never play any sounds or import sound files");
-        console.log("The real play function would have played the sound for " + name + "-method.")
+        //console.log("The real play function would have played the sound for " + name + "-method.")
     }
 }
-
-/*@Component({
-  selector: "game",
-  templateUrl: "../game/game.component.html",
-  styleUrls: ["../game/game.component.css"]
-})
-
-export class GameComponentMock extends GameComponent implements OnInit {
-
-  constructor( public deck: CardDeck, public soundFiles: ButtonSoundsMock) {
-      super(deck, soundFiles);
-  }
-
-  restart() {
-      this.soundFiles = new ButtonSoundsMock();
-      this.soundFiles.play("shuffle");
-      this.deck = new CardDeck();
-      this.clear();
-  }
-}*/

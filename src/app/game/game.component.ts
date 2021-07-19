@@ -59,7 +59,7 @@ export class GameComponent implements OnInit{
     }
 
     bet(amount: number) {
-        console.log('betting...')
+        console.log('betting ' + amount)
         if (this.user.emptyHand && amount > 0) {
             this.user.setBet(amount);
             this.dealer.setBet(amount);
@@ -270,4 +270,22 @@ export class GameComponent implements OnInit{
     }
 }
 
-
+@Component({
+    selector: "game",
+    templateUrl: "./game.component.html",
+    styleUrls: ["./game.component.css"]
+  })
+  
+  export class GameComponentMock extends GameComponent implements OnInit {
+  
+    constructor( public deck: CardDeck, public soundFiles: ButtonSoundsMock) {
+        super(deck, soundFiles);
+    }
+  
+    restart() {
+        this.soundFiles = new ButtonSoundsMock();
+        this.soundFiles.play("shuffle");
+        this.deck = new CardDeck();
+        this.clear();
+    }
+  }
