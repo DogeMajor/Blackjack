@@ -5,6 +5,7 @@ import { PlayerType } from "./player.model"
 import { CardDeck, CardDeckMock } from "./cardDeck.model";
 import { ButtonSounds, ButtonSoundsMock } from "./buttonSounds.model";
 import { Component, OnInit, Input } from "@angular/core";
+import { Directive, HostListener } from '@angular/core';
 
 
 @Component({
@@ -12,10 +13,12 @@ import { Component, OnInit, Input } from "@angular/core";
     templateUrl: "./game.component.html",
     styleUrls: ["./game.component.css"]
 })
+
+
 export class GameComponent implements OnInit{
 
     @Input() pot: number = 0;
-    @Input() round: number = 1;
+    public round: number = 1;
     public gameOver: boolean = false;
     public user: Player;
     public dealer: Player;
@@ -23,7 +26,7 @@ export class GameComponent implements OnInit{
     public splitBet: number = 0;
     public earlierBet: number = 0;
 
-    constructor( public deck: CardDeck, public soundFiles: ButtonSounds ) {
+    constructor( public deck: CardDeck, public soundFiles: ButtonSoundsMock ) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
         this.user = new Player([], 1000, PlayerType.User, "User");        
     }
@@ -33,7 +36,7 @@ export class GameComponent implements OnInit{
     }
 
     restart() {
-        this.soundFiles = new ButtonSounds();
+        this.soundFiles = new ButtonSoundsMock();
         this.soundFiles.play("shuffle");
         this.deck = new CardDeck();
         this.clear();
@@ -46,10 +49,11 @@ export class GameComponent implements OnInit{
     clear() {
         this.dealer.clearHand();
         this.user.clearHand();
-        let amount: number = this.pot / this.howManyPlayers;
-        this.user.transferMoney(amount);
-        this.dealer.transferMoney(amount);
-        this.pot = 0;
+        if (this.pot != 0) {
+            this.user.transferMoney(this.pot / 2);
+            this.dealer.transferMoney(this.pot / 2);
+            this.pot = 0;
+        }
         this.round = 1;
         this.gameOver = false;
     }
@@ -78,10 +82,6 @@ export class GameComponent implements OnInit{
         else {
             alert("This action is not allowed!");
         }
-    }
-
-    get howManyPlayers() {
-        return 2;
     }
 
     get cardsLeft() {
@@ -197,6 +197,8 @@ export class GameComponent implements OnInit{
 
     double() {
         if ( this.canDouble ){
+
+            console.log('Clicked the double button.');
             this.soundFiles.play("coins");
             this.pot += 2 * this.user.bet
             this.dealer.setBet(this.user.bet);
@@ -269,23 +271,3 @@ export class GameComponent implements OnInit{
         alert(name + "-button is disabled!");
     }
 }
-
-@Component({
-    selector: "game",
-    templateUrl: "./game.component.html",
-    styleUrls: ["./game.component.css"]
-  })
-  
-  export class GameComponentMock extends GameComponent implements OnInit {
-  
-    constructor( public deck: CardDeck, public soundFiles: ButtonSoundsMock) {
-        super(deck, soundFiles);
-    }
-  
-    restart() {
-        this.soundFiles = new ButtonSoundsMock();
-        this.soundFiles.play("shuffle");
-        this.deck = new CardDeck();
-        this.clear();
-    }
-  }
