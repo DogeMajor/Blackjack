@@ -5,7 +5,6 @@ import { PlayerType } from "./player.model"
 import { CardDeck, CardDeckMock } from "./cardDeck.model";
 import { ButtonSounds, ButtonSoundsMock } from "./buttonSounds.model";
 import { Component, OnInit, Input } from "@angular/core";
-import { Directive, HostListener } from '@angular/core';
 
 
 @Component({
@@ -104,7 +103,8 @@ export class GameComponent implements OnInit{
         let players: Player[] = [this.dealer, this.user];
         let sortedPlayers = players.filter(player => player.bestHand < 22);
         if (sortedPlayers.length == 0) {
-            return players;  // Everyone will get their money back if their best hands were over 21 so everyone will get winnings
+            return players;  // Everyone will get their money back if their 
+            // best hands were over 21 so everyone will get winnings
         }
         sortedPlayers = sortedPlayers.sort((a: Player, b: Player) => b.bestHand - a.bestHand);
         return sortedPlayers.filter(player => player.bestHand == sortedPlayers[0].bestHand); 
@@ -138,6 +138,7 @@ export class GameComponent implements OnInit{
     }
 
     resolveSplit() {
+        console.log('Resolving split...');
         
         if (this.splitHands.length > 0) {
             this.gameOver = false;
@@ -161,7 +162,7 @@ export class GameComponent implements OnInit{
         }
     }
 
-    playerActionsAreAllowed(): boolean {
+    get canHit(): boolean {
         if (this.user.emptyHand || this.gameOver || this.pot <= 0) {
             return false;
         }
@@ -173,12 +174,9 @@ export class GameComponent implements OnInit{
         }
     }
 
-    get canHit(): boolean {
-        return this.playerActionsAreAllowed();
-    }
-
     hit() {
-        if ( this.playerActionsAreAllowed() ){
+        console.log('Clicked the hit button.');
+        if ( this.canHit ){
             this.dealTo(this.user, 1);
             if (this.user.bestHand >= 21) {
                 this.gameOver = true;
@@ -192,13 +190,12 @@ export class GameComponent implements OnInit{
     }
 
     get canDouble() {
-        return this.playerActionsAreAllowed() && this.user.hand.cards.length == 2 && (this.user.money - this.user.bet) >= 0
+        return this.canHit && this.user.hand.cards.length == 2 && (this.user.money - this.user.bet) >= 0
     }
 
     double() {
+        console.log('Clicked the double button.');
         if ( this.canDouble ){
-
-            console.log('Clicked the double button.');
             this.soundFiles.play("coins");
             this.pot += 2 * this.user.bet
             this.dealer.setBet(this.user.bet);
@@ -219,10 +216,11 @@ export class GameComponent implements OnInit{
     }
 
     get canStand(): boolean {
-        return this.playerActionsAreAllowed();
+        return this.canHit;
     }
 
     stand() {
+        console.log('Clicked the stand button.');
         if ( this.canStand ){
             let playOn: boolean = true && this.hasBlackjack.length == 0;
             while (playOn && this.dealer.bestHand <= 16) {
@@ -242,8 +240,9 @@ export class GameComponent implements OnInit{
     }
 
     split() {
+        console.log('Clicked the split button.');
         if ( this.canSplit ){// @ts-ignore
-            this.splitHands.push(this.user.split())
+            this.splitHands.push(this.user.split());
             this.splitBet = this.user.bet;
             this.dealTo(this.user, 1);
             this.round++;
