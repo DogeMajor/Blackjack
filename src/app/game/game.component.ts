@@ -2,8 +2,8 @@ import { Card } from "./card.model";
 import { Hand } from "./hand.model";
 import { Player } from "./player.model"
 import { PlayerType } from "./player.model"
-import { CardDeck } from "./cardDeck.model";
-import { ButtonSounds } from "./buttonSounds.model";
+import { CardDeck, CardDeckMock } from "./cardDeck.model";
+import { ButtonSounds, ButtonSoundsMock } from "./buttonSounds.model";
 import { Component, OnInit, Input } from "@angular/core";
 
 
@@ -13,10 +13,11 @@ import { Component, OnInit, Input } from "@angular/core";
     styleUrls: ["./game.component.css"]
 })
 
+
 export class GameComponent implements OnInit{
 
     @Input() pot: number = 0;
-    @Input() round: number = 1;
+    public round: number = 1;
     public gameOver: boolean = false;
     public user: Player;
     public dealer: Player;
@@ -24,7 +25,7 @@ export class GameComponent implements OnInit{
     public splitBet: number = 0;
     public earlierBet: number = 0;
 
-    constructor( public deck: CardDeck, public soundFiles: ButtonSounds) {
+    constructor( public deck: CardDeck, public soundFiles: ButtonSoundsMock ) {
         this.dealer = new Player([], 10000, PlayerType.Dealer, "Dealer");
         this.user = new Player([], 1000, PlayerType.User, "User");        
     }
@@ -34,7 +35,7 @@ export class GameComponent implements OnInit{
     }
 
     restart() {
-        this.soundFiles = new ButtonSounds();
+        this.soundFiles = new ButtonSoundsMock();
         this.soundFiles.play("shuffle");
         this.deck = new CardDeck();
         this.clear();
@@ -47,10 +48,11 @@ export class GameComponent implements OnInit{
     clear() {
         this.dealer.clearHand();
         this.user.clearHand();
-        let amount: number = this.pot / this.howManyPlayers;
-        this.user.transferMoney(amount);
-        this.dealer.transferMoney(amount);
-        this.pot = 0;
+        if (this.pot != 0) {
+            this.user.transferMoney(this.pot / 2);
+            this.dealer.transferMoney(this.pot / 2);
+            this.pot = 0;
+        }
         this.round = 1;
         this.gameOver = false;
     }
@@ -60,6 +62,7 @@ export class GameComponent implements OnInit{
     }
 
     bet(amount: number) {
+        console.log('betting ' + amount)
         if (this.user.emptyHand && amount > 0) {
             this.user.setBet(amount);
             this.dealer.setBet(amount);
@@ -78,10 +81,6 @@ export class GameComponent implements OnInit{
         else {
             alert("This action is not allowed!");
         }
-    }
-
-    get howManyPlayers() {
-        return 2;
     }
 
     get cardsLeft() {
@@ -104,7 +103,8 @@ export class GameComponent implements OnInit{
         let players: Player[] = [this.dealer, this.user];
         let sortedPlayers = players.filter(player => player.bestHand < 22);
         if (sortedPlayers.length == 0) {
-            return players;  // Everyone will get their money back if their best hands were over 21 so everyone will get winnings
+            return players;  // Everyone will get their money back if their 
+            // best hands were over 21 so everyone will get winnings
         }
         sortedPlayers = sortedPlayers.sort((a: Player, b: Player) => b.bestHand - a.bestHand);
         return sortedPlayers.filter(player => player.bestHand == sortedPlayers[0].bestHand); 
@@ -138,6 +138,7 @@ export class GameComponent implements OnInit{
     }
 
     resolveSplit() {
+        console.log('Resolving split...');
         
         if (this.splitHands.length > 0) {
             this.gameOver = false;
@@ -161,7 +162,7 @@ export class GameComponent implements OnInit{
         }
     }
 
-    playerActionsAreAllowed(): boolean {
+    get canHit(): boolean {
         if (this.user.emptyHand || this.gameOver || this.pot <= 0) {
             return false;
         }
@@ -173,12 +174,9 @@ export class GameComponent implements OnInit{
         }
     }
 
-    get canHit(): boolean {
-        return this.playerActionsAreAllowed();
-    }
-
     hit() {
-        if ( this.playerActionsAreAllowed() ){
+        console.log('Clicked the hit button.');
+        if ( this.canHit ){
             this.dealTo(this.user, 1);
             if (this.user.bestHand >= 21) {
                 this.gameOver = true;
@@ -192,10 +190,11 @@ export class GameComponent implements OnInit{
     }
 
     get canDouble() {
-        return this.playerActionsAreAllowed() && this.user.hand.cards.length == 2 && (this.user.money - this.user.bet) >= 0
+        return this.canHit && this.user.hand.cards.length == 2 && (this.user.money - this.user.bet) >= 0
     }
 
     double() {
+        console.log('Clicked the double button.');
         if ( this.canDouble ){
             this.soundFiles.play("coins");
             this.pot += 2 * this.user.bet
@@ -217,10 +216,11 @@ export class GameComponent implements OnInit{
     }
 
     get canStand(): boolean {
-        return this.playerActionsAreAllowed();
+        return this.canHit;
     }
 
     stand() {
+        console.log('Clicked the stand button.');
         if ( this.canStand ){
             let playOn: boolean = true && this.hasBlackjack.length == 0;
             while (playOn && this.dealer.bestHand <= 16) {
@@ -240,8 +240,9 @@ export class GameComponent implements OnInit{
     }
 
     split() {
+        console.log('Clicked the split button.');
         if ( this.canSplit ){// @ts-ignore
-            this.splitHands.push(this.user.split())
+            this.splitHands.push(this.user.split());
             this.splitBet = this.user.bet;
             this.dealTo(this.user, 1);
             this.round++;
