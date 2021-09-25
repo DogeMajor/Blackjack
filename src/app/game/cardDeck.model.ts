@@ -1,7 +1,7 @@
-import { Card, Suit } from "./card.model";
-import { Injectable } from "@angular/core";
+import { Card, Suit } from './card.model';
+import { Injectable } from '@angular/core';
 
-var allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]
+const allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs];
 
 
 @Injectable({
@@ -9,27 +9,27 @@ var allSuits: Suit[] = [Suit.Diamonds, Suit.Spades, Suit.Hearts, Suit.Clubs]
 })
 export class CardDeck {
 
-    public cards: Card[] =  []
+    public cards: Card[] =  [];
     constructor() {
         for (let num = 2; num < 15; num++) {
-            for (var suit of allSuits) {
+            for (const suit of allSuits) {
                 this.cards.push(new Card(suit, num));
-            } 
+            }
         }
     }
 
-    get length() {
+    get length(): number {
         return this.cards.length;
     }
 
-    popRandomCards(amount: number = 1) {
-        let cards: Card[] = [];
+    popRandomCards(amount: number = 1): Card[] {
+        const cards: Card[] = [];
         for (let i = 0; i < amount; i++) {
-            let randomIndex = Math.floor(Math.random() * this.cards.length);
+            const randomIndex = Math.floor(Math.random() * this.cards.length);
             cards.push(this.cards[randomIndex]);
             this.cards.splice(randomIndex, 1);
         }
-        return cards;   
+        return cards;
     }
 }
 
@@ -38,21 +38,21 @@ export class CardDeckMock {
     public cards: Card[] = [];
 
     constructor(public cardsVar: Card[]) {
-        for( let card of cardsVar) {
+        for ( const card of cardsVar) {
             this.cards.push(card);
         }
     }
 
-    get length() {
+    get length(): number {
         return this.cards.length;
     }
 
-    popRandomCards(amount: number = 1) {  // Pops the cards in the reversed order; not randomly!
-        let cards: Card[] = [];
+    popRandomCards(amount: number = 1): Card[] {  // Pops the cards in the reversed order; not randomly!
+        const cards: Card[] = [];
         for (let i = 0; i < amount; i++) {
             //  @ts-ignore
             cards.push(this.cards.pop());
         }
-        return cards;   
+        return cards;
     }
 }

@@ -1,9 +1,9 @@
 import { TestBed , ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ComponentRef, DebugElement, Component, OnInit, Injectable } from "@angular/core";
-import { GameComponent } from '../game/game.component'
-import { By } from "@angular/platform-browser";
-import { ButtonSounds, ButtonSoundsMock } from "../game/buttonSounds.model";
+import {  DebugElement, Component, OnInit, Injectable } from '@angular/core';
+import { GameComponent } from '../game/game.component';
+import { By } from '@angular/platform-browser';
+import { ButtonSoundsMock } from '../game/buttonSounds.model';
 import { Card, Suit } from '../game/card.model';
 
 
@@ -27,35 +27,34 @@ export class CardDeckFortesting {
         new Card(Suit.Hearts, 13),  // user Split 2.2 (17, loss)
         new Card(Suit.Diamonds, 10),  // user Split 1.1
         new Card(Suit.Diamonds, 9),  // user Split 1.1 (21, win)
-      ]
-      let rest: number = 52 - this.cards.length;
+      ];
+      const rest: number = 52 - this.cards.length;
       // In order to keep track when we habve traversed the deck too far in the tests 
       // we fill the rest of it with Aces of Diamonds
-      for (let i=0; i<rest; i++) {
+      for (let i = 0; i < rest; i++) {
         this.cards.push(new Card(Suit.Diamonds, 14));
       }
   }
 
-  get length() {
+  get length(): number {
       return this.cards.length;
   }
 
-  popRandomCards(amount: number = 1) {  // Pops the cards in the reversed order; not randomly!
-      let cards: Card[] = [];
+  popRandomCards(amount: number = 1): Card[] {  // Pops the cards in the reversed order; not randomly!
+      const cards: Card[] = [];
       for (let i = 0; i < amount; i++) {
           //  @ts-ignore
           cards.push(this.cards.splice(0, 1));
       }
-      return cards;   
+      return cards;
   }
 }
 
 
-
 @Component({
-  selector: "game",
-  templateUrl: "../game/game.component.html",
-  styleUrls: ["../game/game.component.css"]
+  selector: 'game',
+  templateUrl: '../game/game.component.html',
+  styleUrls: ['../game/game.component.css']
 })
 
 export class GameComponentMock extends GameComponent implements OnInit {
@@ -64,9 +63,9 @@ export class GameComponentMock extends GameComponent implements OnInit {
       super(deck, soundFiles);
   }
 
-  restart() {
+  restart(): void {
       this.soundFiles = new ButtonSoundsMock();
-      this.soundFiles.play("shuffle");
+      this.soundFiles.play('shuffle');
       this.deck = new CardDeckFortesting();
       this.clear();
   }
@@ -78,23 +77,17 @@ describe('GameComponent unit tests', () => {
     let component: GameComponentMock;
     let debugElement: DebugElement;
     let bindingElement: HTMLDivElement;
-    let buttonSounds;
-
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        GameComponentMock
-      ],
+      imports: [RouterTestingModule],
+      declarations: [GameComponentMock]
     }).compileComponents();
 
     fixture = TestBed.createComponent(GameComponentMock);
     component = fixture.componentInstance;
     debugElement = fixture.debugElement;
-    bindingElement = debugElement.query(By.css("div")).nativeElement;
+    bindingElement = debugElement.query(By.css('div')).nativeElement;
     fixture.detectChanges();
   });
 
@@ -108,9 +101,9 @@ describe('GameComponent unit tests', () => {
   });
 
   it(`should contain grid titles`, () => {
-    expect(bindingElement.textContent).toContain("Menu");
-    expect(bindingElement.textContent).toContain("Game Status");
-    expect(bindingElement.textContent).toContain("Results");
+    expect(bindingElement.textContent).toContain('Menu');
+    expect(bindingElement.textContent).toContain('Game Status');
+    expect(bindingElement.textContent).toContain('Results');
   });
 
   it(`should contain game status -related data bindings`, () => {
@@ -138,13 +131,13 @@ describe('GameComponent unit tests', () => {
 
   it(`Should find bet button and it should be clickable`, fakeAsync(() => {
     fixture.detectChanges();
-    //let inputEl = debugElement.query(By.css(".inputBet")).nativeElement;
-    let inputEl = debugElement.query(By.css("#inputBet")).nativeElement;
+    //let inputEl = debugElement.query(By.css('.inputBet')).nativeElement;
+    let inputEl = debugElement.query(By.css('#inputBet')).nativeElement;
     expect(inputEl).toBeTruthy();
-    let betDivEl = debugElement.query(By.css(".bet")).query(By.css("div")).nativeElement;
-    expect(betDivEl.textContent).toContain("Bet");
+    let betDivEl = debugElement.query(By.css('.bet')).query(By.css('div')).nativeElement;
+    expect(betDivEl.textContent).toContain('Bet');
     expect(inputEl.value).toBe('0');
-    let betButton = debugElement.query(By.css("#betButton")).nativeElement;
+    let betButton = debugElement.query(By.css('#betButton')).nativeElement;
     expect(betButton).toBeTruthy();
 
     spyOn(component, 'bet');
@@ -153,10 +146,7 @@ describe('GameComponent unit tests', () => {
     expect(component.bet).toHaveBeenCalled();
   })
   );
-
 });
-
-
 
 
 /*Tests for different (inter)actions on the page.
@@ -183,11 +173,11 @@ beforeEach(async () => {
   fixture = TestBed.createComponent(GameComponentMock);
   component = fixture.componentInstance;
   debugElement = fixture.debugElement;
-  bindingElement = debugElement.query(By.css("div")).nativeElement;
+  bindingElement = debugElement.query(By.css('div')).nativeElement;
   component.ngOnInit()  // In test mode angular does not call components ngOnInit automatically!!!
   fixture.detectChanges();
-  let betButtonElement = debugElement.query(By.css("#betButton"));
-  let inputBetEl = debugElement.query(By.css("#inputBet")).nativeElement;
+  let betButtonElement = debugElement.query(By.css('#betButton'));
+  let inputBetEl = debugElement.query(By.css('#inputBet')).nativeElement;
   inputBetEl.value = '100'
   betButtonElement.triggerEventHandler('click', null);
   fixture.detectChanges();
@@ -199,29 +189,29 @@ afterEach(async () => {
 
 it('beforeEach should work', () => {
   fixture.detectChanges();
-  expect(bindingElement.textContent).toContain("Menu");
+  expect(bindingElement.textContent).toContain('Menu');
   expect(component.cardsLeft).toBe(48);
   expect(component.pot).toBe(200);
-  let betDivEl = debugElement.query(By.css(".bet")).query(By.css("div"));
+  let betDivEl = debugElement.query(By.css('.bet')).query(By.css('div'));
   expect(betDivEl).toBeFalsy();
-  let actionEls: DebugElement[] = debugElement.query(By.css(".actions")).queryAll(By.css("div"));
+  let actionEls: DebugElement[] = debugElement.query(By.css('.actions')).queryAll(By.css('div'));
   console.log(actionEls[0]);
   expect(actionEls[0].nativeElement.textContent).toBe('New game');
 
   if( !component.gameOver ){
     expect(actionEls).toHaveSize(4);
-    let hitButton = debugElement.query(By.css("#hitButton"));
+    let hitButton = debugElement.query(By.css('#hitButton'));
     expect(hitButton).toBeTruthy();
   }
   else {
     expect(actionEls).toHaveSize(1);
-    let hitButton = debugElement.query(By.css("#hitButton"));
+    let hitButton = debugElement.query(By.css('#hitButton'));
     expect(hitButton).toBeFalsy();
   }
 });
 
 it(`Should click hit button`, fakeAsync(() => {
-  let hitButton = debugElement.query(By.css("#hitButton"));
+  let hitButton = debugElement.query(By.css('#hitButton'));
   expect(hitButton).toBeTruthy();
   hitButton.triggerEventHandler('click', null);
   tick(200);
@@ -237,7 +227,7 @@ it(`Should click hit button`, fakeAsync(() => {
       expect(component.canStand).toBeTrue();
       expect(component.canResolveSplit).toBe(false);
       expect(component.canSplit).toBe(false);
-      hitButton = debugElement.query(By.css("#hitButton"));
+      hitButton = debugElement.query(By.css('#hitButton'));
       if(component.canHit) {
         expect(hitButton).toBeTruthy();
       }
@@ -249,8 +239,7 @@ it(`Should click hit button`, fakeAsync(() => {
 }));
 
 it(`Should click stand button`, fakeAsync(() => {
-  
-  let standButton = debugElement.query(By.css("#standButton"));
+  let standButton = debugElement.query(By.css('#standButton'));
   expect(standButton).toBeTruthy();
   standButton.triggerEventHandler('click', null);
   tick(200);
@@ -266,14 +255,13 @@ it(`Should click stand button`, fakeAsync(() => {
     expect(component.canStand).toBeFalse();
     expect(component.canResolveSplit).toBe(false);
     expect(component.canSplit).toBe(false);
-    standButton = debugElement.query(By.css("#standButton"));
+    standButton = debugElement.query(By.css('#standButton'));
     expect(standButton).toBeFalsy();
   });
 }));
 
-
 it(`Should click double button`, fakeAsync(() => {
-  let doubleButton = debugElement.query(By.css("#doubleButton"));
+  let doubleButton = debugElement.query(By.css('#doubleButton'));
   expect(doubleButton).toBeTruthy();
   doubleButton.triggerEventHandler('click', null);
   tick(400);
@@ -289,21 +277,20 @@ it(`Should click double button`, fakeAsync(() => {
     expect(component.canStand).toBeFalse();
     expect(component.canResolveSplit).toBe(false);
     expect(component.canSplit).toBe(false);
-    doubleButton = debugElement.query(By.css("#doubleButton"));
+    doubleButton = debugElement.query(By.css('#doubleButton'));
     expect(doubleButton).toBeFalsy();
   });
-
 }));
 
 
 // The test for two successive splitting is unfortunately quite long and brittle.
 // The TestDeck defined above must be kept similar!
 it(`Should handle successive splittings correctly`, fakeAsync(() => {
-  let splitButton = debugElement.query(By.css("#splitButton"));
-  let hitButton = debugElement.query(By.css("#hitButton"));
-  let standButton = debugElement.query(By.css("#standButton"));
-  let resolveSplitButton = debugElement.query(By.css("#resolveSplitButton"));
-  let restartButton = debugElement.query(By.css("#restartButton"));
+  let splitButton = debugElement.query(By.css('#splitButton'));
+  let hitButton = debugElement.query(By.css('#hitButton'));
+  let standButton = debugElement.query(By.css('#standButton'));
+  let resolveSplitButton = debugElement.query(By.css('#resolveSplitButton'));
+  let restartButton = debugElement.query(By.css('#restartButton'));
   expect(splitButton).toBeTruthy();
   console.log('User\'s hand is:');
   console.log(JSON.stringify(component.user.hand));
@@ -323,7 +310,7 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
     expect(component.canHit).toBeTrue();
     expect(component.canStand).toBeTrue();
     expect(component.canResolveSplit).toBe(false);
-    splitButton = debugElement.query(By.css("#splitButton"));
+    splitButton = debugElement.query(By.css('#splitButton'));
     expect(splitButton).toBeTruthy();
     // Because in the testing deck we get three deuces in a row!
     console.log('Splitting for the 2nd time...');
@@ -343,7 +330,7 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
       expect(component.canStand).toBeTrue();
       expect(component.canResolveSplit).toBe(false);
 
-      hitButton = debugElement.query(By.css("#hitButton"));
+      hitButton = debugElement.query(By.css('#hitButton'));
       expect(hitButton).toBeTruthy();
       console.log('Hitting for the 1st time...');
       hitButton.triggerEventHandler('click', null);  // First hit event
@@ -360,10 +347,10 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
         expect(component.canStand).toBeTrue();
         expect(component.canResolveSplit).toBe(false);
         expect(component.canSplit).toBe(false);
-        splitButton = debugElement.query(By.css("#splitButton"));
+        splitButton = debugElement.query(By.css('#splitButton'));
         expect(splitButton).toBeFalsy();
-  
-        hitButton = debugElement.query(By.css("#hitButton"));
+
+        hitButton = debugElement.query(By.css('#hitButton'));
         expect(hitButton).toBeTruthy();
         console.log('Hitting for the 2nd time...');
         hitButton.triggerEventHandler('click', null);  // second hit event
@@ -373,33 +360,31 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
         fixture.whenStable().then(() => {
           console.log('User\'s hand is:');
           console.log(JSON.stringify(component.user.hand));
-          
+
           expect(component.user.hand.howManyCards).toBe(4);
           expect(component.round).toBe(6);
           expect(component.canStand).toBeTrue();
           expect(component.canResolveSplit).toBe(false);
           expect(component.canSplit).toBe(false);
-    
-          standButton = debugElement.query(By.css("#standButton"));
+
+          standButton = debugElement.query(By.css('#standButton'));
           expect(standButton).toBeTruthy();
           console.log('Standing with 4 cards in the hand...');
           standButton.triggerEventHandler('click', null);  // First stand event
-
 
           tick(200);
           fixture.detectChanges();
           fixture.whenStable().then(() => {
             console.log('User\'s hand is:');
             console.log(JSON.stringify(component.user.hand));
-          
             expect(component.user.hand.howManyCards).toBe(4);
             expect(component.round).toBe(6);
             expect(component.canResolveSplit).toBeTrue();
             expect(component.canSplit).toBeFalse();
-            splitButton = debugElement.query(By.css("#splitButton"));
+            splitButton = debugElement.query(By.css('#splitButton'));
             expect(splitButton).toBeFalsy();
-    
-            resolveSplitButton = debugElement.query(By.css("#resolveSplitButton"));
+
+            resolveSplitButton = debugElement.query(By.css('#resolveSplitButton'));
             expect(resolveSplitButton).toBeTruthy();
             console.log('Getting the next hand...');
             resolveSplitButton.triggerEventHandler('click', null);  // First stand event
@@ -409,12 +394,12 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
             fixture.whenStable().then(() => {
               console.log('User\'s hand is:');
               console.log(JSON.stringify(component.user.hand));
-            
+
               expect(component.user.hand.howManyCards).toBe(2);
               expect(component.round).toBe(2);
               expect(component.canHit).toBeTrue();
-        
-              hitButton = debugElement.query(By.css("#hitButton"));
+
+              hitButton = debugElement.query(By.css('#hitButton'));
               expect(hitButton).toBeTruthy();
               console.log('Hitting 1st time for the second hand..');
               hitButton.triggerEventHandler('click', null);  // 1st hit for the 2nd hand
@@ -424,26 +409,25 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
               fixture.whenStable().then(() => {
                 console.log('User\'s hand is:');
                 console.log(JSON.stringify(component.user.hand));
-                
+
                 expect(component.user.hand.howManyCards).toBe(3);
                 expect(component.round).toBe(3);
                 expect(component.canStand).toBeTrue();
-                standButton = debugElement.query(By.css("#standButton"));
+                standButton = debugElement.query(By.css('#standButton'));
                 expect(standButton).toBeTruthy();
                 console.log('Stand for the second hand..');
                 standButton.triggerEventHandler('click', null);  // 1st stand for the 2nd hand
-
 
                 tick(200);
                 fixture.detectChanges();
                 fixture.whenStable().then(() => {
                   console.log('User\'s hand is:');
                   console.log(JSON.stringify(component.user.hand));
-                    
+
                   expect(component.user.hand.howManyCards).toBe(3);
                   expect(component.round).toBe(3);
                   expect(component.canResolveSplit).toBeTrue();
-                  resolveSplitButton = debugElement.query(By.css("#resolveSplitButton"));
+                  resolveSplitButton = debugElement.query(By.css('#resolveSplitButton'));
                   expect(resolveSplitButton).toBeTruthy();
                   console.log('Playing the third hand..');
                   resolveSplitButton.triggerEventHandler('click', null);  // Go to 3rd (and last) hand
@@ -453,11 +437,11 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
                   fixture.whenStable().then(() => {
                     console.log('User\'s hand is:');
                     console.log(JSON.stringify(component.user.hand));
-                        
+
                     expect(component.user.hand.howManyCards).toBe(2);
                     expect(component.round).toBe(2);
                     expect(component.canHit).toBeTrue();
-                    hitButton = debugElement.query(By.css("#hitButton"));
+                    hitButton = debugElement.query(By.css('#hitButton'));
                     expect(hitButton).toBeTruthy();
                     console.log('1st hit for the 3rd hand..');
                     hitButton.triggerEventHandler('click', null);  // 1st hit for the 3rd hand
@@ -467,32 +451,30 @@ it(`Should handle successive splittings correctly`, fakeAsync(() => {
                     fixture.whenStable().then(() => {
                       console.log('User\'s hand is:');
                       console.log(JSON.stringify(component.user.hand));
-                            
+
                       expect(component.user.hand.howManyCards).toBe(3);
                       expect(component.round).toBe(3);
                       expect(component.canStand).toBeTrue();
-                      standButton = debugElement.query(By.css("#standButton"));
+                      standButton = debugElement.query(By.css('#standButton'));
                       expect(standButton).toBeTruthy();
                       console.log('1st stand for the 3rd hand..');
                       standButton.triggerEventHandler('click', null);  // 1st stand for the 3rd hand
-                    
 
                       tick(200);
                       fixture.detectChanges();
                       fixture.whenStable().then(() => {
                         console.log('User\'s hand is:');
                         console.log(JSON.stringify(component.user.hand));
-                              
+
                         expect(component.user.hand.howManyCards).toBe(3);
                         expect(component.round).toBe(3);
                         expect(component.gameOver).toBeTrue();
-                        restartButton = debugElement.query(By.css("#restartButton"));
+                        restartButton = debugElement.query(By.css('#restartButton'));
                         expect(restartButton).toBeTruthy();
-                              
-                        }); 
-                      });    
+                        });
+                      });
                     });
-                  }); 
+                  });
                 });
               });
             });

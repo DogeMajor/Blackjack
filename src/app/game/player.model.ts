@@ -1,38 +1,39 @@
-import { Card } from "./card.model";
-import { Hand } from "./hand.model";
+import { Card } from './card.model';
+import { Hand } from './hand.model';
 
 
 export enum PlayerType {
-    Dealer = "DEALER",
-    User = "USER",
-    NPC = "NPC",
+    Dealer = 'DEALER',
+    User = 'USER',
+    NPC = 'NPC',
 }
 
 export class Player {
-    public bet: number = 0;
+    public bet = 0;
     public hand: Hand;
-    
+    public type: PlayerType;
+    public name: string;
+    public money: number;
     
     constructor(
-        public cardsVar: Card[],
-        public money: number,
-        public type: PlayerType,
-        public name: string,
-        
+        cardsVar: Card[],
+        money: number,
+        type: PlayerType,
+        name: string,
         ) {
-        this.hand = new Hand(cardsVar)
+        this.hand = new Hand(cardsVar);
         this.money = money;
         this.type = type;
         this.name = name;
     }
 
-    setBet(amount: number) {
+    setBet(amount: number): void {
         if (this.money - amount < 0) {
-            alert("Player has insufficient funds for the bet!");
+            alert('Player has insufficient funds for the bet!');
         }
         else {
             this.money -= amount;
-            this.bet += amount; // For doubling!
+            this.bet += amount; // This is neded for doubling!
         }
     }
 
@@ -48,21 +49,21 @@ export class Player {
         return this.hand.handValues;
     }
 
-    transferMoney(amount: number) {
+    transferMoney(amount: number): void {
         this.money += amount;
     }
 
-    clearHand() {
+    clearHand(): void {
         this.bet = 0;
         this.hand.clearHand();
     }
 
-    deal(cards: Card[]) {
+    deal(cards: Card[]): void {
         this.hand.deal(cards);
     }
 
     split(): Hand {// @ts-ignore
-        let poppedCard: card = this.hand.cards.pop();
+        const poppedCard: card = this.hand.cards.pop();
         this.hand.split = true;
         return new Hand([poppedCard], false, true);
     }

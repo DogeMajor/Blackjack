@@ -1,41 +1,46 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 
-var SOURCES: Map<string, string> = new Map();
-SOURCES.set("shuffle", "../../../assets/sounds/card-deck-shuffle.wav");
-SOURCES.set("flick", "../../../assets/sounds/card-flick.wav");
-SOURCES.set("hits", "../../../assets/sounds/card-hits.wav");
-SOURCES.set("placement", "../../../assets/sounds/card-placement.wav");
-SOURCES.set("coins", "../../../assets/sounds/coins.wav");
-SOURCES.set("warning", "../../../assets/sounds/warning.wav");
+const SOURCES: Map<string, string> = new Map();
+SOURCES.set('shuffle', '../../../assets/sounds/shuffle.wav');
+SOURCES.set('deal_one_card', '../../../assets/sounds/deal_one_card.wav');
+SOURCES.set('deal_two_cards', '../../../assets/sounds/deal_two_cards.wav');
+SOURCES.set('coins', '../../../assets/sounds/coins.wav');
+SOURCES.set('bet', '../../../assets/sounds/bet.wav');
+SOURCES.set('warning', '../../../assets/sounds/warning.wav');
 
 @Injectable({
     providedIn: 'root',
 })
 export class ButtonSounds {
 
-    public sounds: Map<string, any>
-    
+    public sounds: Map<string, any>;
+
     constructor() {
         this.sounds = new Map<string, any>();
-        for(let el of SOURCES) {
+        for (const el of SOURCES) {
             this.addSound(el[0], el[1]);
-        }      
+        }
     }
-    
-    loadAudio(path: string) {
-        let audio = new Audio();
+
+    loadAudio(path: string): any {
+        const audio = new Audio();
         audio.src = path;
         audio.load();
         return audio;
     }
 
-    addSound(key: string, path: string) {
+    addSound(key: string, path: string): void {
         this.sounds.set(key, this.loadAudio(path));
     }
 
-    play(name: string) {
-        this.sounds.get(name).play();
+    play(name: string, timeout?: number): void {
+        if (timeout) {
+            setTimeout(() => { this.play(name); }, timeout);
+        }
+        else {
+            this.sounds.get(name).play();
+        }
     }
 }
 
@@ -44,21 +49,22 @@ export class ButtonSounds {
 })
 export class ButtonSoundsMock {
 
-    public sounds: Map<string, any>
-    
+    public sounds: Map<string, any>;
+
     constructor() {
-        this.sounds = new Map<string, any>();   
+        this.sounds = new Map<string, any>();
     }
 
-    loadAudio(path: string) {
+    loadAudio(path: string): any {
         return new Audio();
     }
 
-    addSound(key: string, path: string) {
-        console.log("Nothing happens in this mocked class when adding sounds");;
+    addSound(key: string, path: string): void {
+        console.log('Nothing happens in this mocked class when adding sounds');
     }
 
-    play(name: string) {
-        //console.log("The real play function would have played the sound for " + name + "-method.")
+    play(name: string, timeout?: number): void {
+        console.log('The real play function would have played the sound for ' + name + '-method.');
     }
+
 }

@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 
 
 @Component({
-    selector: "app-root",
-    template: "<game></game>"
-    //template: "app.component.html"
+    selector: 'app-root',
+    template: '<game></game>'
 })
 
-export class AppComponent { 
-    title = "Blackjack";
+export class AppComponent {
+    title = 'Blackjack';
 }
