@@ -1,6 +1,6 @@
 # Blackjack
 
-Autodidactic project for getting acquainted with angular and ts.
+Short project for getting acquainted with angular and ts.
 The app supports all the normal blackjack actions: hit, stand, bet, double and split. After installing needed depedencies you can run `ng serve` and open `http://localhost:4200/` to run the dev server. The sound effects are stored in the assets/sounds flder and you can replace them with your own ones. See the model buttonSounds.model.ts in src/game-folder. If you want to rename or add more sounds also change the source code calling the play-method in gameComponent.ts, which is the main component of the app.
 
 

@@ -37,8 +37,8 @@ export class CardDeck {
 export class CardDeckMock {
     public cards: Card[] = [];
 
-    constructor(public cardsVar: Card[]) {
-        for ( const card of cardsVar) {
+    constructor(cards: Card[]) {
+        for ( const card of cards) {
             this.cards.push(card);
         }
     }
